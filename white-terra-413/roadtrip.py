@@ -174,9 +174,6 @@ class New_adventure(RoadTripHandler):
                 journey.put()
                 self.redirect('new_friends')
 
-    def done(self, *a, **kw):
-        raise NotImplementedError
-
 #Fonctionement de l'api Outpost.Travel
 class Travel(RoadTripHandler):
     def get(self):
@@ -195,6 +192,27 @@ class New_friends(RoadTripHandler):
             self.render('new_friends.html', username = self.user.name)
         else:
             self.redirect('/signup')
+
+class New_etape(RoadTripHandler):
+    def get(self):
+        if self.user:
+            self.render('new_etape.html', username = self.user.name)
+        else:
+            self.redirect('/signup')
+
+    def post(self):
+            self.destination = self.request.get('destination')
+            #mettre une majuscule au debut
+            destination = self.destination
+            destination = destination.lower()
+            destination = destination.title()
+            url = "http://api.outpost.travel/placeRentals?city="+destination
+            response = urllib2.urlopen(url)
+            data = json.load(response)
+            totalpage=json.dumps(data['totalPages'])
+            self.render('new_etape.html',username = self.user.name,totalpage=totalpage)
+
+
 
 USER_RE = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
 def valid_username(username):
@@ -285,6 +303,7 @@ class Logout(RoadTripHandler):
 app = webapp2.WSGIApplication([('/', MainPage),
                               ('/travel', Travel),
                                ('/new_friends', New_friends),
+                               ('/new_etape', New_etape),
                               ('/new_adventure', New_adventure),
                               ('/welcome', Welcome),
                                ('/signup', Register),

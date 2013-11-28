@@ -1,11 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+ <p align="center"> <a href='new_adventure' class="BigButton">Begin a Journey</a>
 
-  {% for p in posts %}
-    {{ p.render() | safe }}
-    <br><br>
-  {% endfor %}
   <br>
-  <div class="queried"> {{querysecond}}</div> 
 {% endblock %}

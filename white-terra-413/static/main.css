@@ -1,9 +1,10 @@
 body {
-    font-family: Times New Roman, serif
+    font-family: Times New Roman, serif;
     font-size: 14px;
-    width: 800px;
+    
     margin: 0 auto;
-    padding: 10px;
+	padding: 0;
+	height: 100%;
     color: #333;
 }
 
@@ -13,6 +14,16 @@ html {
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
+  margin: 0;
+	padding: 0;
+	height: 100%;
+}
+
+div#page {
+	position: relative;
+	width: 60%;
+	margin: 0 auto;
+	min-height: 100%;
 }
 
 h2 {
@@ -53,31 +64,39 @@ input[type=submit] {
 }
 
 .main-title {
-    width:850px;
+    width:900px;
     display: block;
     background-color: rgba(255, 255, 255, 0.75);
     font-variant:small-caps;
-    font-weight: 500
-    padding: 2em;
+    font-weight: 500;
+    padding: 0.1em;
     border-radius: 25px;
     color: #222;
     font-size: 70px;
     font-weight: bold;
-    text-align: left;
+    text-align: center;
     text-decoration: none;
 }
 
 .login-area{
-    width:90px;
-    display: block;
-    background-color: rgba(255, 255, 255, 0.75);
-    padding: 0.6em;
-    border-radius: 15px;
-
+	width:100%;
+	height:30px;
+    display: inline-block;
+    position: fixed;
+	top: 0px;
+    background-color: rgba(200, 200, 200, 0.75);
+	font-size: 24px;
+	margin:0;
+    padding: 0em;
+    text-align: right;	
 }
-
-.post + .post {
-    margin-top: 15px;
+.homepage{
+    position: fixed;
+	top: 0px;
+	font-size: 24px;
+	margin:0;
+    padding: 0em;
+    text-align: left;	
 }
 
 .post-heading {
@@ -98,7 +117,51 @@ input[type=submit] {
 
 }
 
-.post-content {
-    margin-top: 5px;
-}
 
+
+.BigButton {
+	-moz-box-shadow:inset 0px 1px 3px 0px #3c783c;
+	-webkit-box-shadow:inset 0px 1px 3px 0px #3c783c;
+	box-shadow:inset 0px 1px 3px 0px #3c783c;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #1e5329), color-stop(1, #3c7832) );
+	background:-moz-linear-gradient( center top, #1e5329 5%, #3c7832 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#1e5329', endColorstr='#3c7832');
+	background-color:#1e5329;
+	-webkit-border-top-left-radius:20px;
+	-moz-border-radius-topleft:20px;
+	border-top-left-radius:20px;
+	-webkit-border-top-right-radius:20px;
+	-moz-border-radius-topright:20px;
+	border-top-right-radius:20px;
+	-webkit-border-bottom-right-radius:20px;
+	-moz-border-radius-bottomright:20px;
+	border-bottom-right-radius:20px;
+	-webkit-border-bottom-left-radius:20px;
+	-moz-border-radius-bottomleft:20px;
+	border-bottom-left-radius:20px;
+	text-indent:0;
+	border:2px solid white;
+	display:inline-block;
+	color:#ffffff;
+	font-family:Times New Roman;
+	font-size:50px;
+	font-weight:bold;
+	font-style:normal;
+	height:90px;
+	line-height:90px;
+	width:400px;
+	text-decoration:none;
+	text-align:center;
+	text-shadow:-2px -2px 0px #0c1201;
+    margin : auto;
+	margin-top: 10%;
+}
+.BigButton:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #3c7832), color-stop(1, #1e5329) );
+	background:-moz-linear-gradient( center top, #3c7832 5%, #1e5329 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#3c7832', endColorstr='#1e5329');
+	background-color:#3c7832;
+}.BigButton:active {
+	position:relative;
+	top:1px;
+}

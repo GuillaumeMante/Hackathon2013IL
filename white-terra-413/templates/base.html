@@ -1,6 +1,23 @@
 <!DOCTYPE html>
 <html>
-<head>
+<br>
+<br>
+<br>
+ 
+  <div class="login-area">
+   {% if user %} {{user.name}} (<a class="login-link" href="/logout">Logout</a>)
+    {% else %}
+      <a class="login-link" href="/login">Login</a>
+      |
+      <a class="login-link" href="/signup">Signup</a>
+    {% endif %}  
+  </div>
+  
+   <div class="homepage">  
+<a class="hompage"href="/">Homepage</a>
+  </div>
+  
+<head> <p align="center">  
   <link type="text/css" rel="stylesheet" href="/static/main.css" />
   <link rel="shortcut icon" href="favicon.ico"/>
 
@@ -17,21 +34,13 @@
  HEIGHT=60>
 
   </a>
-	
-  <div class="login-area">
-    {% if user %}
-      {{user.name}} (<a class="login-link" href="/logout">Logout</a>)
-    {% else %}
-      <a class="login-link" href="/login">Login</a>
-      |
-      <a class="login-link" href="/signup">Signup</a>
-    {% endif %}
-  </div>
-  
-  <div id="content">
+    <div id="content">
   {% block content %}
   {% endblock %}
   </div>
+	
+
+
 </body>
 
 </html>

@@ -23,6 +23,8 @@ import logging
 import json
 import time
 from string import letters
+import urllib
+import urllib2
 
 import webapp2
 import jinja2
@@ -144,9 +146,6 @@ class User(db.Model):
         if u and valid_pw(name, pw, u.pw_hash):
             return u
 
-def blog_key(name = 'default'):
-    return db.Key.from_path('blogs', name)
-
 
 class Welcome(RoadTripHandler):
     def get(self):
@@ -155,24 +154,18 @@ class Welcome(RoadTripHandler):
         else:
             self.redirect('/signup')
 
-class Post(db.Model):
-    subject = db.StringProperty(required = True)
-    content = db.TextProperty(required = True)
-    created = db.DateTimeProperty(auto_now_add = True)
-    last_modified = db.DateTimeProperty(auto_now = True)
 
-    def render(self):
-        self._render_text = self.content.replace('\n', '<br>')
-        return render_str("post.html", p = self)
-
-
-    def as_dict(self):
-        time_fmt = '%c'
-        d = {'subject': self.subject,
-             'content': self.content,
-             'created': self.created.strftime(time_fmt),
-             'last_modified': self.last_modified.strftime(time_fmt)}
-        return d
+#Fonctionement de l'api Outpost.Travel
+class Travel(RoadTripHandler):
+    def get(self):
+        if self.user:
+            url = "http://api.outpost.travel/placeRentals?city=Strasbourg"
+            response = urllib2.urlopen(url)
+            data = json.load(response)
+            page=json.dumps(data['page'])
+            self.render('travel.html',page=page)
+        else:
+            self.redirect('/signup')
 
 USER_RE = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
 def valid_username(username):
@@ -260,6 +253,7 @@ class Logout(RoadTripHandler):
 
 
 app = webapp2.WSGIApplication([('/', MainPage),
+                              ('/travel', Travel),
                               ('/welcome', Welcome),
                                ('/signup', Register),
 								('/blog/signup', Register),

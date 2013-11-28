@@ -1,4 +1,5 @@
 from string import letters
+import random
 import hashlib
 from google.appengine.ext import webapp
 from google.appengine.ext import db
@@ -54,8 +55,9 @@ class User(db.Model):
 class Journey(db.Model):
 	owner = db.ReferenceProperty(User, required = True)
 	name = db.StringProperty(required = True)
-	start = db.DateTimeProperty()
-	end = db.DateTimeProperty()
+	start = db.StringProperty()
+	end = db.StringProperty()
+	budget = db.IntegerProperty()
 	
 	def getSteps(self):
 		suggs = self.suggestions

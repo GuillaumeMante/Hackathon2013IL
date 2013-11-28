@@ -170,6 +170,8 @@ class New_adventure(RoadTripHandler):
             if have_error:
                 self.render('new_adventure.html', **params)
             else:
+                journey = Journey(owner = self.user, name = "hey it miss a field to give a name to this wonderful journey", start = self.date_debut, end = self.date_fin, budget = int(self.budget))
+                journey.put()
                 self.redirect('new_friends')
 
     def done(self, *a, **kw):

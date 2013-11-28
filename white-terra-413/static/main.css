@@ -1,11 +1,18 @@
 body {
-    font-family: Helvetica, Arial, sans-serif;
+    font-family: Times New Roman, serif
     font-size: 14px;
-
     width: 800px;
     margin: 0 auto;
     padding: 10px;
     color: #333;
+}
+
+html {
+  background: url('http://i.imgur.com/5poLESx.jpg') no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
 }
 
 h2 {
@@ -46,13 +53,27 @@ input[type=submit] {
 }
 
 .main-title {
+    width:850px;
     display: block;
+    background-color: rgba(255, 255, 255, 0.75);
+    font-variant:small-caps;
+    font-weight: 500
+    padding: 2em;
+    border-radius: 25px;
     color: #222;
-    font-size: 40px;
+    font-size: 70px;
     font-weight: bold;
-    text-align: center;
-    margin-bottom: 30px;
+    text-align: left;
     text-decoration: none;
+}
+
+.login-area{
+    width:90px;
+    display: block;
+    background-color: rgba(255, 255, 255, 0.75);
+    padding: 0.6em;
+    border-radius: 15px;
+
 }
 
 .post + .post {

@@ -44,13 +44,18 @@ class User(db.Model):
 		u = cls.by_name(name)
 		if u and valid_pw(name, pw, u.pw_hash):
 			return u
-
+	
+	def get_invitations(self):
+		invitations = []
+		for inv in self.invitations:
+			invitations.append(inv.user, inv.message)
+		return invitations
 
 class Journey(db.Model):
 	owner = db.ReferenceProperty(User, required = True)
 	name = db.StringProperty(required = True)
-	start = db.DateTimeProperty(auto_now_add = True)
-	end = db.DateTimeProperty(auto_now_add = True)
+	start = db.DateTimeProperty()
+	end = db.DateTimeProperty()
 	
 	def getSteps(self):
 		suggs = self.suggestions
@@ -59,7 +64,18 @@ class Journey(db.Model):
 			while len(steps) < suggestion.step - 1:
 				steps.append([])
 			steps[suggestion.step-1].append(Suggestion)
-		return steps;	
+		return steps;
+	
+	def delete(self):
+		for i in self.guestList:
+			delete(i)
+		for u in self.participants:
+			delete(u)
+		for s in suggestions:
+			s.delete()
+		for m in self.messages:
+			delete(m)
+		delete(self)
 
 class Suggestion(db.Model):
 	journey = db.ReferenceProperty(Journey, required = True, collection_name="suggestions")
@@ -71,6 +87,11 @@ class Suggestion(db.Model):
 		for v in self.votes:
 			votes.append(v.user)
 		return votes
+		
+	def delete(self):
+		for v in self.votes:
+			delete(v)
+		delete(self)
 
 class Vote(db.Model):
 	user = db.ReferenceProperty(User, required = True, collection_name="user_votes")
@@ -79,7 +100,14 @@ class Vote(db.Model):
 class Invitation(db.Model):
 	journey = db.ReferenceProperty(Journey, required = True, collection_name="guestList")
 	user = db.ReferenceProperty(User, required = True, collection_name="invitations")
+	message = db.StringProperty(multiline=True)
+	state = db.IntegerProperty(required=True)
 
 class Participant(db.Model):
-	journey = db.ReferenceProperty(Journey, required = True)
+	journey = db.ReferenceProperty(Journey, required = True, collection_name="participants")
 	user = db.ReferenceProperty(User, required = True, collection_name="journeys")
+	
+class Message(db.Model):
+	author = db.ReferenceProperty(User, required = True)
+	journey = db.ReferenceProperty(Journey, required = True, collection_name="messages")
+	message = message = db.StringProperty(multiline=True)

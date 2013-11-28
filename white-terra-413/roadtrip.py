@@ -99,7 +99,7 @@ class RoadTripHandler(webapp2.RequestHandler):
 
 class MainPage(RoadTripHandler):
   def get(self):
-      self.write('Hello, Udacity!')
+      self.write('Hello, An expected journey')
 
 
 def make_salt(length = 5):

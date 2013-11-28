@@ -1,12 +1,10 @@
-<html>
-	<head>
-		<title>Unit 2 Signup</title>
-	</head>
+{% extends "base.html" %}
 
-	<body>
-		<h2>Travel</h2>
-		<div>
-		PAGE : {{page}}
-		</div>
-	</body>
-</html>
+{% block content %}
+    <h1>TRAVEL</h1>
+    <br>
+    <div>
+    <input type="button" name="Begin an adventure" value="new_adventure" onclick="self.location.href='new_adventure.html'" style="background-color:#3cb371" style="color:white; font-weight:bold"onclick>
+
+    </div>
+{% endblock %}

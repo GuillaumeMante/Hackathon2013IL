@@ -99,7 +99,6 @@ class RoadTripHandler(webapp2.RequestHandler):
         else:
             self.format = 'html'
 
-
 class MainPage(RoadTripHandler):
 
     def get(self):
@@ -172,6 +171,8 @@ class New_adventure(RoadTripHandler):
             else:
                 journey = Journey(owner = self.user, name = "hey it miss a field to give a name to this wonderful journey", start = self.date_debut, end = self.date_fin, budget = int(self.budget))
                 journey.put()
+                self.set_journey(journey)
+                participant = Participant(journey = journey, user = self.user)
                 self.redirect('new_friends')
 
     def done(self, *a, **kw):
@@ -190,11 +191,11 @@ class Travel(RoadTripHandler):
             self.redirect('/signup')
 
 class New_friends(RoadTripHandler):
-    def get(self):
-        if self.user:
-            self.render('new_friends.html', username = self.user.name)
-        else:
-            self.redirect('/signup')
+	def get(self):
+		if self.user:
+			self.render('new_friends.html', username = self.user.name)
+		else:
+			self.redirect('/signup')
 
 USER_RE = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
 def valid_username(username):

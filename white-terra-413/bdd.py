@@ -20,21 +20,25 @@ def users_key(group = 'default'):
     return db.Key.from_path('users', group)
 
 class User(db.Model):
-	login = db.StringProperty(required = True)
-	mail = db.StringProperty(required = True)
+	name = db.StringProperty(required = True)
+	email = db.StringProperty()
 	pw_hash = db.StringProperty(required = True)
 	@classmethod
 	def by_id(cls, uid):
 		return User.get_by_id(uid, parent = users_key())
 	
 	@classmethod
-	def register(cls, name, pw, email):
+	def register(cls, name, pw, email = None):
 		pw_hash = make_pw_hash(name, pw)
 		return User(parent = users_key(),
 					name = name,
 					pw_hash = pw_hash,
-					email = email)
-
+					mail = email)
+	@classmethod
+	def by_name(cls, name):
+		u = User.all().filter('name =', name).get()
+		return u
+		
 	@classmethod
 	def login(cls, name, pw):
 		u = cls.by_name(name)
@@ -45,8 +49,8 @@ class User(db.Model):
 class Journey(db.Model):
 	owner = db.ReferenceProperty(User, required = True)
 	name = db.StringProperty(required = True)
-	start = db.DateTimeProperty()
-	end = db.DateTimeProperty()
+	start = db.DateTimeProperty(auto_now_add = True)
+	end = db.DateTimeProperty(auto_now_add = True)
 	
 	def getSteps(self):
 		suggs = self.suggestions

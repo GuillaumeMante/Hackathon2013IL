@@ -27,9 +27,11 @@ from bdd import *
 import urllib
 import urllib2
 
+
 import webapp2
 import jinja2
 
+from datetime import datetime
 from google.appengine.ext import db
 
 template_dir = os.path.join(os.path.dirname(__file__), 'templates')
@@ -129,6 +131,49 @@ class Welcome(RoadTripHandler):
         else:
             self.redirect('/signup')
 
+DATE_RE = re.compile(r'(\d+/\d+/\d+)')
+def valid_date(date):
+    return date and DATE_RE.match(date)
+
+BUDGET_RE = re.compile('^-?[0-9]+$')
+def valid_budget(budget):
+    return budget and BUDGET_RE.match(budget)
+
+class New_adventure(RoadTripHandler):
+    def get(self):
+        if self.user:
+            self.render('new_adventure.html', username = self.user.name)
+        else:
+            self.redirect('/signup')
+    def post(self):
+            have_error = False
+            self.date_debut = self.request.get('date_debut')
+            self.date_fin = self.request.get('date_fin')
+            self.budget = self.request.get('budget')
+
+            params = dict(date_debut = self.date_debut,
+                          date_fin = self.date_fin,
+                          budget = self.budget)
+
+            if not valid_date(self.date_debut):
+                params['error_date_debut'] = "Ceci n'est pas une date valide."
+                have_error = True
+
+            if not valid_date(self.date_fin):
+                params['error_date_fin'] = "Ceci n'est pas une date valide."
+                have_error = True
+
+            if not valid_budget(self.budget):
+                params['error_budget'] = "Ceci n'est pas un budget valide."
+                have_error = True
+
+            if have_error:
+                self.render('new_adventure.html', **params)
+            else:
+                self.redirect('new_friends')
+
+    def done(self, *a, **kw):
+        raise NotImplementedError
 
 #Fonctionement de l'api Outpost.Travel
 class Travel(RoadTripHandler):
@@ -139,6 +184,13 @@ class Travel(RoadTripHandler):
             data = json.load(response)
             page=json.dumps(data['page'])
             self.render('travel.html',page=page)
+        else:
+            self.redirect('/signup')
+
+class New_friends(RoadTripHandler):
+    def get(self):
+        if self.user:
+            self.render('new_friends.html', username = self.user.name)
         else:
             self.redirect('/signup')
 
@@ -153,6 +205,7 @@ def valid_password(password):
 EMAIL_RE  = re.compile(r'^[\S]+@[\S]+\.[\S]+$')
 def valid_email(email):
     return not email or EMAIL_RE.match(email)
+
 
 class Signup(RoadTripHandler):
     def get(self):
@@ -224,16 +277,16 @@ class Login(RoadTripHandler):
 class Logout(RoadTripHandler):
     def get(self):
         self.logout()
-        self.redirect('/blog')
+        self.redirect('/travel')
 
 
 app = webapp2.WSGIApplication([('/', MainPage),
                               ('/travel', Travel),
+                               ('/new_friends', New_friends),
+                              ('/new_adventure', New_adventure),
                               ('/welcome', Welcome),
                                ('/signup', Register),
-								('/blog/signup', Register),
                                ('/login', Login),
-							   	('/blog/login', Login),
                                ('/logout', Logout),
                                ],
                               debug=True)

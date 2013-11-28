@@ -3,27 +3,21 @@
 <head>
   <link type="text/css" rel="stylesheet" href="/static/main.css" />
 
-  <title>An Expected Journey</title>
+  <title>Dat Blog !!!</title>
 </head>
 
 <body>
-  <a class="main-title">
-
-     <IMG SRC="http://i.imgur.com/wiQawAJ.png"
- WIDTH=60
- HEIGHT=60> An Expected Journey <IMG SRC="http://kit-sticker.com/images/14039-frodo-baggins-lord-of-the-rings-s.png"
- WIDTH=60
- HEIGHT=60>
-
+  <a href="/blog" class="main-title">
+    Dat BLog !!!
   </a>
 	
   <div class="login-area">
     {% if user %}
-      {{user.name}} (<a class="login-link" href="/logout">Logout</a>)
+      {{user.name}} (<a class="login-link" href="/logout">logout</a>)
     {% else %}
-      <a class="login-link" href="/login">Login</a>
+      <a class="login-link" href="/login">login</a>
       |
-      <a class="login-link" href="/signup">Signup</a>
+      <a class="login-link" href="/signup">signup</a>
     {% endif %}
   </div>
   

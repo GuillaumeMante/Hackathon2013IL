@@ -94,10 +94,11 @@ class RoadTripHandler(webapp2.RequestHandler):
         uid = self.read_secure_cookie('user_id')
         self.user = uid and User.by_id(int(uid))
 
-		if self.request.url.endswith('.json'):
-			self.format = 'json'
-		else:
-			self.format = 'html'
+        if self.request.url.endswith('.json'):
+            self.format = 'json'
+        else:
+            self.format = 'html'
+
 
 class MainPage(RoadTripHandler):
 
@@ -264,12 +265,27 @@ class New_etape(RoadTripHandler):
 
 
 
-class New_friends(RoadTripHandler):
+class NewFriends(RoadTripHandler):
     def get(self):
         if self.user:
-            self.render('new_friends.html', username = self.user.name)
+            self.render('new_friends.html', username=self.user.name)
         else:
-            self.redirect('/signup')
+            self.redirect('/login')
+
+    def post(self):
+
+        if self.request.get('friendname'):
+            friendname = User.by_name(self.request.get('friendname'))
+            fl = self.user.get_friends()
+            if friendname:
+                self.user.add_friend(friendname)
+                #participant=Participant(journey=
+                self.render('new_friends.html', friendlist=fl)
+            else:
+                msg = 'No such guy here'
+                self.render('new_friends.html', friendlist=fl, error=msg)
+        else:
+            self.render('new_friends.html', error='That\'s not a name')
 
 USER_RE = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
 def valid_username(username):
@@ -332,8 +348,8 @@ class Register(Signup):
             u = User.register(self.username, self.password, self.email)
             u.put()
 
-			self.login(u)
-			self.redirect('/')
+            self.login(u)
+            self.redirect('/')
 
 class Login(RoadTripHandler):
 	def get(self):
@@ -455,7 +471,7 @@ class Vote(RoadTripHandler):
 app = webapp2.WSGIApplication([('/', MainPage),
 							  ('/travel', Travel),
 							   ('/restaurant', Restaurant),
-							   ('/new_friends', New_friends),
+							   ('/new_friends', NewFriends),
 							   ('/autocomplettest', Test),
 							   ('/new_etape', New_etape),
 							  ('/new_adventure', New_adventure),

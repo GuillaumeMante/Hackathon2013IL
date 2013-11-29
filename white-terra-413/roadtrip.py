@@ -282,9 +282,9 @@ class NewFriends(RoadTripHandler):
             fl = journey.participants
             if friendname:
                 journey = Journey.get_by_id(int(self.request.get('id')))
-                participant=Participant(journey=journey, user = friendname)
+                participant = Participant(journey=journey, user=friendname)
                 participant.put()
-                self.render('new_friends.html', friendlist=fl, journey = journey)
+                self.render('new_friends.html', friendlist=fl, journey=journey)
             else:
                 msg = 'No such guy here'
                 self.render('new_friends.html', friendlist=fl, error=msg, journey = journey)

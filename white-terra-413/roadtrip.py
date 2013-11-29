@@ -184,16 +184,22 @@ class New_etape(RoadTripHandler):
             self.redirect('/login')
 
     def post(self):
-            self.destination = self.request.get('destination')
-            #mettre une majuscule au debut
-            destination = self.destination
-            destination = destination.lower()
-            destination = destination.title()
-            url = "http://api.outpost.travel/placeRentals?city="+destination
-            response = urllib2.urlopen(url)
-            data = json.load(response)
-            totalpage=json.dumps(data['totalPages'])
-            self.render('new_etape.html',username = self.user.name,totalpage=totalpage)
+        self.destination = self.request.get('destination')
+        #mettre une majuscule au debut
+        destination = self.destination
+        destination = destination.lower()
+        destination = destination.title()
+        url = "http://api.outpost.travel/placeRentals?city="+destination
+        response = urllib2.urlopen(url)
+        data = json.load(response)
+        totalpage=json.dumps(data['totalPages'])
+        totalresults=json.dumps(data['totalResults'])
+        blockannonce = json.dumps(data['items'][0]['occupancy'])
+        for i in range(1,10):
+            blockannonce=blockannonce+"/<br>"+"minimumStayNight: "+json.dumps(data['items'][i]['minimumStayNight'])+", occupancy: "+json.dumps(data['items'][i]['occupancy'])
+        self.render('new_etape.html',username = self.user.name,totalpage=totalpage,blockannonce=blockannonce)
+
+
 
 
 

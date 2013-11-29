@@ -73,7 +73,7 @@ class BlogHandler(webapp2.RequestHandler):
         self.user = uid and User.by_id(int(uid))
 
         if self.request.url.endswith('.json'):
-            self.format = 'json'
+            self.rrmat = 'json'
         else:
             self.format = 'html'
 

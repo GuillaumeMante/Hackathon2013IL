@@ -32,7 +32,7 @@
 		</div>
 		{% endfor %}
 		{% if sugg_enabled %}
-		<input type="button" value="new step" />
+		<input type="button" value="new step" onclick="self.location.href='/new?id={{i.key().id()}}'"/>
 		{% endif %}
     </div>
 {% endblock %}

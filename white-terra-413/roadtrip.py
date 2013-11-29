@@ -104,7 +104,8 @@ class MainPage(RoadTripHandler):
     def get(self):
 		if self.user:
 			self.render('front.html', user = self.user, journeys = self.user.get_journeys(), invitations = self.user.get_invitations())
-
+		else
+			self.render('front.html', user = None, journeys = None, invitations = None)
 DATE_RE = re.compile(r'(\d+/\d+/\d+)')
 def valid_date(date):
     return date and DATE_RE.match(date)
@@ -145,7 +146,7 @@ class New_adventure(RoadTripHandler):
             if have_error:
                 self.render('new_adventure.html', **params)
             else:
-                journey = Journey(owner = self.user, name = self.name, start = self.date_debut, end = self.date_fin, budget = int(self.budget))
+                journey = Journey(owner = self.user, name = self.name, start = self.date_debut, end = self.date_fin, budget = int(self.budget), nbr_steps = 0)
                 journey.put()
                 participant = Participant(journey = journey, user = self.user)
                 participant.put()

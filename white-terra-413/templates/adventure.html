@@ -21,33 +21,33 @@
 			<h5>Accommodations</h5>
 			<div>{% for s in steps[i]['accommodation'] %}
 				<div>
-				<a onclick="javascript:show('{{i}}|{{s.id}}')">{{s.id}}</a>
-				<div id="{{i}}|{{s.id}}" style="display:none;visibility:hidden">
+				<a onclick="javascript:show('{{i}}|{{s[0].id}}')">{{s[0].id}}</a>
+				<div id="{{i}}|{{s[0].key().id()}}" style="display:none;visibility:hidden">
 					<p> votants : <br />
-					{% for u in s.get_votants() %}
+					{% for u in s[0].get_votants() %}
 					{{u.name}} <br />
 					{% endfor %}</p>
-					<input type="button" value="vote" onclick="self.location.href='/vote?id={{s.key().id()}}'"/>
-					<input type="button" value="hide" onclick="javascript:hide('{{i}}|{{s.id}}')" />
+					<input type="button" value="vote" onclick="self.location.href='/vote?id={{s[0].key().id()}}'"/>
+					<input type="button" value="hide" onclick="javascript:hide('{{i}}|{{s[0].key().id()}}')" />
 				</div>
 				</div>
 			{% endfor %}
 			</div>
 			{% if sugg_enabled %}
-			<p align="right"><input type="button" value="Add suggestion" /></p>
+			<p align="right"><input type="button" value="Add suggestion" onclick="self.location.href='/new_etape?id={{journey.key().id()}}&amp;step={{i+1}}'" /></p>
 			{% endif %}
 			
 			<h5>Food</h5>
 			<div>{% for s in steps[i]['food'] %}
 			<div>
-				<a onclick="javascript:show('{{i}}|{{s.id}}')">{{s.id}}</a>
-				<div id="{{i}}|{{s.id}}" style="display:none;visibility:hidden">
+				<a onclick="javascript:show('{{i}}|{{s[0].id}}')">{{s[0].id}}</a>
+				<div id="{{i}}|{{s[0].id}}" style="display:none;visibility:hidden">
 					<p> votants : <br />
-							{% for u in s.get_votants() %}
+							{% for u in s[0].get_votants() %}
 							{{u.name}} <br />
 							{% endfor %}</p>
-					<input type="button" value="vote" onclick="self.location.href='/vote?id={{s.key().id()}}'"/>
-					<input type="button" value="hide" onclick="javascript:hide('{{i}}|{{s.id}}')" />
+					<input type="button" value="vote" onclick="self.location.href='/vote?id={{s[0].key().id()}}'"/>
+					<input type="button" value="hide" onclick="javascript:hide('{{i}}|{{s[0].key().id()}}')" />
 				</div>
 			</div>
 			{% endfor %}

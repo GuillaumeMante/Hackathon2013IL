@@ -179,12 +179,16 @@ class Test(RoadTripHandler):
 
 class New_etape(RoadTripHandler):
     def get(self):
-        if self.user:
-            self.render('new_etape.html', username = self.user.name)
+        journey = Journey.get_by_id(int(self.request.get('id')))
+        step = int(self.request.get('step'))
+        if self.user and journey:
+            self.render('new_etape.html', username = self.user.name, journey = journey, step = step)
         else:
             self.redirect('/login')
 
     def post(self):
+        journey = Journey.get_by_id(int(self.request.get('id')))
+        step = int(self.request.get('step'))
         if self.request.get('destination') :
             self.destination = self.request.get('destination')
             #mettre une majuscule au debut
@@ -250,7 +254,7 @@ class New_etape(RoadTripHandler):
                         tabblockannonce.append(blockannonce)
 
 
-            self.render('new_etape.html',username = self.user.name,totalresults=totalresults,tabblockannonce=tabblockannonce,test=test,erreur=erreur);
+            self.render('new_etape.html',username = self.user.name,totalresults=totalresults,tabblockannonce=tabblockannonce,test=test,erreur=erreur, journey = journey, step = step);
 
 
 
@@ -354,6 +358,35 @@ class Adventure(RoadTripHandler):
 				self.redirect('/')
 			else:
 				steps = journey.get_steps()
+				self.render('adventure.html', length = len(steps), steps = steps, journey = journey, sugg_enabled = journey.enable_sugg or journey.owner.key().id() == self.user.key().id())
+		else:
+			self.redirect('/')
+	def post(self):
+		journey = Journey.get_by_id(int(self.request.get('id')))
+		
+		if journey and self.user:
+			error = True
+			for j in self.user.get_journeys():
+				if j.key().id() == journey.key().id():
+					error = False
+					break
+			if error:
+				self.redirect('/')
+			else:
+				acc = self.request.get('accommodation')
+				step = int(self.request.get('step'))
+				steps = journey.get_steps()
+				for s in steps[step-1]['accommodation'][0]:
+					if s.id == acc:
+						error = True
+						break
+				if not error:
+					s = Suggestion(journey = journey, step = step, type = 'accommodation', id = acc)
+					s.put()
+					url1 = "http://api.outpost.travel/placeRentals/" + acc
+					response1 = urllib2.urlopen(url1)
+					data1 = json.load(response1)
+					steps[step-1]['accommodation'].append([s, data1])
 				self.render('adventure.html', length = len(steps), steps = steps, journey = journey, sugg_enabled = journey.enable_sugg or journey.owner.key().id() == self.user.key().id())
 		else:
 			self.redirect('/')

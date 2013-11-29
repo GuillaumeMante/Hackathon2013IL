@@ -52,8 +52,15 @@ class User(db.Model):
 	def get_invitations(self):
 		invitations = []
 		for inv in self.invitations:
-			invitations.append(inv.user, inv.message)
+			if i.state == 1:
+				invitations.append(inv.user, inv.message)
 		return invitations
+		
+	def get_journeys(self):
+		journeys = []
+		for i in self.journeys:
+			journeys.append(i.journey)
+		return journeys
 
 class Journey(db.Model):
 	owner = db.ReferenceProperty(User, required = True)

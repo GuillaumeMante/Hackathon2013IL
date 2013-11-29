@@ -104,31 +104,12 @@ class MainPage(RoadTripHandler):
     def get(self):
 	    self.render('front.html')
 
-
-def make_salt(length = 5):
-    return ''.join(random.choice(letters) for x in xrange(length))
-
-def make_pw_hash(name, pw, salt = None):
-    if not salt:
-        salt = make_salt()
-    h = hashlib.sha256(name + pw + salt).hexdigest()
-    return '%s,%s' % (salt, h)
-
-def valid_pw(name, password, h):
-    salt = h.split(',')[0]
-    return h == make_pw_hash(name, password, salt)
-
-def users_key(group = 'default'):
-    return db.Key.from_path('users', group)
-
-
-
 class Welcome(RoadTripHandler):
-    def get(self):
-        if self.user:
-            self.render('welcome.html', username = self.user.name)
-        else:
-            self.redirect('/signup')
+	def get(self):
+		if self.user:
+			self.render('welcome.html', username = self.user.name, journeys = self.user.get_journeys(), invitations = self.user.get_invitations())
+		else:
+			self.redirect('/signup')
 
 DATE_RE = re.compile(r'(\d+/\d+/\d+)')
 def valid_date(date):
@@ -171,8 +152,8 @@ class New_adventure(RoadTripHandler):
             else:
                 journey = Journey(owner = self.user, name = "hey it miss a field to give a name to this wonderful journey", start = self.date_debut, end = self.date_fin, budget = int(self.budget))
                 journey.put()
-                self.set_journey(journey)
                 participant = Participant(journey = journey, user = self.user)
+                participant.put()
                 self.redirect('new_friends')
 
 #Fonctionement de l'api Outpost.Travel

@@ -5,5 +5,20 @@
 
 	<body>
 		<h2>Welcome, {{username}}!</h2>
+		<h3>your Journeys</h3>
+		<p>{% for j in journeys %}
+			<a href="/journeys?id={{j.key().id()}}">{{j.name}}</a>
+			{% endfor %}
+		</p>
+		<h3>Invitations received</h3>
+		<div>{% for i in invitations %}
+			<p><h6>{{i.journey.name}}</h6>
+			{{i.journey.owner.name}} invited you in his journey from {{i.journey.start}} to {{i.journey.end}} (~ {{i.journey.budget}}€).<br />
+			{% if i.message %}
+			description :<br />
+			{{i.message}}
+			{% endif %}</p>
+			{% endfor %}
+		</div>
 	</body>
 </html>

@@ -13,7 +13,8 @@
 			el.style.visibility="hidden";
 		}
 	</script>
-   <div class="box" style="width:600px; margin-right:auto; margin-left:auto;">
+
+   <div class="box" style="width:90%; margin-right:auto; margin-left:auto;">
 		<h3>{{journey.name}}</h3>
 		{% for i in range(0,length) %}
 		<div class="step"><h6>Step {{i + 1}}</h6>
@@ -68,7 +69,7 @@
 		</div>
 		{% endfor %}
 		{% if sugg_enabled %}
-		<input type="button" value="New step" onclick="self.location.href='/new_step?id={{journey.key().id()}}'"/>
+		<p align="center"><input type="button" value="New step" onclick="self.location.href='/new_step?id={{journey.key().id()}}'"/></p>
 		{% endif %}
     </div>
 {% endblock %}

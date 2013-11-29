@@ -151,7 +151,7 @@ class New_adventure(RoadTripHandler):
                 journey.put()
                 participant = Participant(journey = journey, user = self.user)
                 participant.put()
-                self.redirect('new_friends?id=' + journey.key().id())
+                self.redirect('new_friends?id=' + str(journey.key().id()))
 
 
 #Fonctionement de l'api Outpost.Travel

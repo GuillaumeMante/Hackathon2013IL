@@ -8,6 +8,7 @@ body {
     color: #333;
 }
 
+
 html {
   background: url('images/background1.jpg') no-repeat center center fixed;
   -webkit-background-size: cover;
@@ -100,10 +101,6 @@ li {
 label {
   display: block;
   font-size: 20px;
-}
-
-label + label {
-    margin-top: 20px;
 }
 
 .sign-input{
@@ -403,6 +400,16 @@ input[value="ok"]{
 	width:60px;
 	float:right;
 }
+
+.ui-autocomplete {
+    background-color: white;
+    width: 300px;
+    border: 1px solid #cfcfcf;
+    list-style-type: none;
+    padding-left: 0px;
+}
+
+
 
 
 	

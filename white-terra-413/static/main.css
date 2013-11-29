@@ -214,6 +214,12 @@ form{
 	margin-right:30px;
 }
 
+.box{
+    background-color: rgba(255, 255, 255, 0.75);
+    border-radius: 25px;
+	padding:1em;
+}
+
 input[type="text"]{
 	margin:auto;
 	padding:auto;

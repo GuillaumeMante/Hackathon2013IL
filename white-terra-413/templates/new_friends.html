@@ -1,15 +1,41 @@
 {% extends "base.html" %}
 
 {% block content %}
- <div style="width:600px; margin-right:auto; margin-left:auto;margin-top:50px;">
-     <form method="post">
-	 	<h3>New Friends</h3>
-       <table>
-        
+    <h1>Your Fellowship</h1>
+    {% if friendlist%}
+     <p> Here are your comrades</p>
+      <form methode="post">
+           <table>
+        {% for i in friendlist %}
+               <tr>
+                 <td>
+                     Name : {{i.name}}
+                     <br>
+                 </td>
+                </tr>
+        {% endfor %}
+         </table>
+        </form>
+    {% else %}
+     <p> Unfortunately, you have no friends yet.</p>
+    {% endif %}
 
-       </table>
-      <p align="right"><input type="submit"  value="Validate"></p>
-      </form>
+    <form method="post">
+        <table>
+            <tr>
+            <td class="label">
+                Username
+            </td>
+            <td>
+                <input type="text" name="friendname" value="">
+            </td>
+            </tr>
+        </table>
+        <div class="error">
+            {{error}}
+        </div>
+         <p> <input type="submit"  value="Validate"> </p>
+    </form>
 
     </div>
 {% endblock %}

@@ -36,7 +36,7 @@ from google.appengine.ext import db
 
 template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir),
-							   autoescape = True)
+                               autoescape = True)
 
 start_time=0;
 this_time=0;
@@ -44,60 +44,61 @@ query_time=0;
 cache = {};
 secret="lolilol"
 def render_str(template, **params):
-	t = jinja_env.get_template(template)
-	return t.render(params)
+    t = jinja_env.get_template(template)
+    return t.render(params)
 
 def make_secure_val(val):
-	return '%s|%s' % (val, hmac.new(secret, val).hexdigest())
+    return '%s|%s' % (val, hmac.new(secret, val).hexdigest())
 
 def check_secure_val(secure_val):
-	val = secure_val.split('|')[0]
-	if secure_val == make_secure_val(val):
-		return val
+    val = secure_val.split('|')[0]
+    if secure_val == make_secure_val(val):
+        return val
 
 
 class RoadTripHandler(webapp2.RequestHandler):
-	def write(self, *a, **kw):
-		self.response.out.write(*a, **kw)
+    def write(self, *a, **kw):
+        self.response.out.write(*a, **kw)
 
-	def render_str(self, template, **params):
-		params['user'] = self.user
-		t = jinja_env.get_template(template)
-		return t.render(params)
+    def render_str(self, template, **params):
+        params['user'] = self.user
+        t = jinja_env.get_template(template)
+        return t.render(params)
 
-	def render(self, template, **kw):
-		self.write(self.render_str(template, **kw))
+    def render(self, template, **kw):
+        self.write(self.render_str(template, **kw))
 
-	def render_json(self, d):
-		json_txt = json.dumps(d)
-		self.response.headers['Content-Type'] = 'application/json; charset=UTF-8'
-		self.write(json_txt)
+    def render_json(self, d):
+        json_txt = json.dumps(d)
+        self.response.headers['Content-Type'] = 'application/json; charset=UTF-8'
+        self.write(json_txt)
 
-	def set_secure_cookie(self, name, val):
-		cookie_val = make_secure_val(val)
-		self.response.headers.add_header(
-			'Set-Cookie',
-			'%s=%s; Path=/' % (name, cookie_val))
+    def set_secure_cookie(self, name, val):
+        cookie_val = make_secure_val(val)
+        self.response.headers.add_header(
+            'Set-Cookie',
+            '%s=%s; Path=/' % (name, cookie_val))
 
-	def read_secure_cookie(self, name):
-		cookie_val = self.request.cookies.get(name)
-		return cookie_val and check_secure_val(cookie_val)
+    def read_secure_cookie(self, name):
+        cookie_val = self.request.cookies.get(name)
+        return cookie_val and check_secure_val(cookie_val)
 
-	def login(self, user):
-		self.set_secure_cookie('user_id', str(user.key().id()))
+    def login(self, user):
+        self.set_secure_cookie('user_id', str(user.key().id()))
 
-	def logout(self):
-		self.response.headers.add_header('Set-Cookie', 'user_id=; Path=/')
+    def logout(self):
+        self.response.headers.add_header('Set-Cookie', 'user_id=; Path=/')
 
-	def initialize(self, *a, **kw):
-		webapp2.RequestHandler.initialize(self, *a, **kw)
-		uid = self.read_secure_cookie('user_id')
-		self.user = uid and User.by_id(int(uid))
+    def initialize(self, *a, **kw):
+        webapp2.RequestHandler.initialize(self, *a, **kw)
+        uid = self.read_secure_cookie('user_id')
+        self.user = uid and User.by_id(int(uid))
 
-		if self.request.url.endswith('.json'):
-			self.format = 'json'
-		else:
-			self.format = 'html'
+        if self.request.url.endswith('.json'):
+            self.format = 'json'
+        else:
+            self.format = 'html'
+
 
 class MainPage(RoadTripHandler):
 
@@ -265,70 +266,91 @@ class New_etape(RoadTripHandler):
 
 
 
+class NewFriends(RoadTripHandler):
+    def get(self):
+        if self.user:
+            self.render('new_friends.html', username=self.user.name)
+        else:
+            self.redirect('/login')
+
+    def post(self):
+
+        if self.request.get('friendname'):
+            friendname = User.by_name(self.request.get('friendname'))
+            fl = self.user.get_friends()
+            if friendname:
+                self.user.add_friend(friendname)
+                #participant=Participant(journey=
+                self.render('new_friends.html', friendlist=fl)
+            else:
+                msg = 'No such guy here'
+                self.render('new_friends.html', friendlist=fl, error=msg)
+        else:
+            self.render('new_friends.html', error='That\'s not a name')
 
 USER_RE = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
 def valid_username(username):
-	return username and USER_RE.match(username)
+    return username and USER_RE.match(username)
 
 PASS_RE = re.compile(r"^.{3,20}$")
 def valid_password(password):
-	return password and PASS_RE.match(password)
+    return password and PASS_RE.match(password)
 
 EMAIL_RE  = re.compile(r'^[\S]+@[\S]+\.[\S]+$')
 def valid_email(email):
-	return not email or EMAIL_RE.match(email)
+    return not email or EMAIL_RE.match(email)
 
 
 class Signup(RoadTripHandler):
-	def get(self):
-		self.render("signup-form.html")
+    def get(self):
+        self.render("signup-form.html")
 
-	def post(self):
-		have_error = False
-		self.username = self.request.get('username')
-		self.password = self.request.get('password')
-		self.verify = self.request.get('verify')
-		self.email = self.request.get('email')
+    def post(self):
+        have_error = False
+        self.username = self.request.get('username')
+        self.password = self.request.get('password')
+        self.verify = self.request.get('verify')
+        self.email = self.request.get('email')
 
-		params = dict(username = self.username,
-					  email = self.email)
+        params = dict(username = self.username,
+                      email = self.email)
 
-		if not valid_username(self.username):
-			params['error_username'] = "That's not a valid username."
-			have_error = True
+        if not valid_username(self.username):
+            params['error_username'] = "That's not a valid username."
+            have_error = True
 
-		if not valid_password(self.password):
-			params['error_password'] = "That wasn't a valid password."
-			have_error = True
-		elif self.password != self.verify:
-			params['error_verify'] = "Your passwords didn't match."
-			have_error = True
+        if not valid_password(self.password):
+            params['error_password'] = "That wasn't a valid password."
+            have_error = True
+        elif self.password != self.verify:
+            params['error_verify'] = "Your passwords didn't match."
+            have_error = True
 
-		if not valid_email(self.email):
-			params['error_email'] = "That's not a valid email."
-			have_error = True
+        if not valid_email(self.email):
+            params['error_email'] = "That's not a valid email."
+            have_error = True
 
-		if have_error:
-			self.render('signup-form.html', **params)
-		else:
-			self.done()
+        if have_error:
+            self.render('signup-form.html', **params)
+        else:
+            self.done()
 
-	def done(self, *a, **kw):
-		raise NotImplementedError
+    def done(self, *a, **kw):
+        raise NotImplementedError
 
 class Register(Signup):
-	def done(self):
-		#make sure the user doesn't already exist
-		u = User.by_name(self.username)
-		if u:
-			msg = 'That user already exists.'
-			self.render('signup-form.html', error_username = msg)
-		else:
-			u = User.register(self.username, self.password, self.email)
-			u.put()
+    def done(self):
+        #make sure the user doesn't already exist
+        u = User.by_name(self.username)
+        if u:
+            msg = 'That user already exists.'
+            self.render('signup-form.html', error_username = msg)
+        else:
+            u = User.register(self.username, self.password, self.email)
+            u.put()
 
-			self.login(u)
-			self.redirect('/')
+            self.login(u)
+            self.redirect('/')
 
 class Login(RoadTripHandler):
 	def get(self):
@@ -347,9 +369,9 @@ class Login(RoadTripHandler):
 			self.render('login-form.html', error = msg)
 
 class Logout(RoadTripHandler):
-	def get(self):
-		self.logout()
-		self.redirect('/travel')
+    def get(self):
+        self.logout()
+        self.redirect('/travel')
 
 class Adventure(RoadTripHandler):
 	def get(self):
@@ -451,7 +473,7 @@ class Vote(RoadTripHandler):
 app = webapp2.WSGIApplication([('/', MainPage),
 							  ('/travel', Travel),
 							   ('/restaurant', Restaurant),
-							   ('/new_friends', New_friends),
+							   ('/new_friends', NewFriends),
 							   ('/autocomplettest', Test),
 							   ('/new_etape', New_etape),
 							  ('/new_adventure', New_adventure),

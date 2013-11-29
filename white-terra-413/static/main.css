@@ -18,7 +18,14 @@ html {
 	padding: 0;
 	height: 100%;
 }
-
+input[name="New message"]{
+	display:inline-block;
+	float:left;
+	margin:auto; 
+	width:70%;
+	font-size:30px;
+	height:40px;
+}
 div#page {
 	position: relative;
 	width: 60%;
@@ -99,9 +106,24 @@ label + label {
     margin-top: 20px;
 }
 
-input[type=text] {
-    width: 500px;
+.sign-input{
+    width: 274px;
     font-size: 20px;
+	height:20px;
+    padding: 2px;
+    font-family: monospace;
+}
+.pass-input{
+    width: 270px;
+    font-size: 20px;
+	height:20px;
+    padding: 2px;
+    font-family: monospace;
+}
+.new-input{
+    width: 300px;
+    font-size: 20px;
+	height:20px;
     padding: 2px;
     font-family: monospace;
 }
@@ -257,29 +279,17 @@ form{
 	margin-top: 75px;
 	margin-left:30px;
 	margin-right:30px;
-	text-margin:20pyx;
 }
 
-.ui-autocomplete {
-    background-color: white;
-    width: 300px;
-    border: 1px solid #cfcfcf;
-    list-style-type: none;
-    padding-left: 0px;
+.adventure-box{
+	font-size: 24px;
+    background-color: rgba(255, 255, 255, 0.75);
+    border-radius: 25px;
+	padding:1em;
+    text-decoration: none;
+	margin-top: 75px;
 }
 
-input[type="text"]{
-	margin:auto;
-	padding:auto;
-	height:20px;
-	width:270px;
-}
-input[type="password"]{
-	margin:auto;
-	padding:auto;
-	height:20px;
-	width:274px;
-}
 
 
 
@@ -386,3 +396,13 @@ input[value="Add suggestion"]{
 input[value="Vote"]{
 	font-size:15px;
 }
+
+input[value="ok"]{
+	font-size:30px;
+	height:50px;
+	width:60px;
+	float:right;
+}
+
+
+	

@@ -13,23 +13,38 @@
 			el.style.visibility="hidden";
 		}
 	</script>
+	<div>
 
-   <div class="box" style="width:90%; margin-right:auto; margin-left:auto;">
+ 
+ <div class="adventure-box" style="width:70%; margin-left:1%; float:left">
 		<h3>{{journey.name}}</h3>
 		{% for i in range(0,length) %}
 		<div class="step"><h6>Step {{i + 1}}</h6>
-			<h5>Accommodations</h5>
-			<div>{% for s in steps[i]['accommodation'] %}
-				<div>
+			<h5>Places</h5>
+			<div>{% for s in steps[i]['place'] %}
 				<a onclick="javascript:show('{{i}}|{{s.id}}')">{{s.id}}</a>
 				<div id="{{i}}|{{s.id}}" style="display:none;visibility:hidden">
 					<p> votants : <br />
 					{% for u in s.get_votants() %}
 					{{u.name}} <br />
 					{% endfor %}</p>
-					<input type="button" value="vote" onclick="self.location.href='/vote?id={{s.key().id()}}'"/>
-					<input type="button" value="hide" onclick="javascript:hide('{{i}}|{{s.id}}')" />
+					<input type="button" value="vote" /><input type="button" value="hide" onclick="javascript:hide('{{i}}|{{s.id}}')" />
 				</div>
+			{% endfor %}
+			</div>
+			{% if sugg_enabled %}
+			<p align="right"><input type="button" value="Add suggestion" /></p>
+			{% endif %}
+			
+			<h5>Accommodations</h5>
+			<div>{% for s in steps[i]['accommodation'] %}
+				<a onclick="javascript:show('{{i}}|{{s.id}}')">{{s.id}}</a>
+				<div id="{{i}}|{{s.id}}" style="display:none;visibility:hidden">
+					<p> votants : <br />
+					{% for u in s.get_votants() %}
+					{{u.name}} <br />
+					{% endfor %}</p>
+					<input type="button" value="vote" /><input type="button" value="hide" onclick="javascript:hide('{{i}}|{{s.id}}')" />
 				</div>
 			{% endfor %}
 			</div>
@@ -39,17 +54,14 @@
 			
 			<h5>Food</h5>
 			<div>{% for s in steps[i]['food'] %}
-			<div>
 				<a onclick="javascript:show('{{i}}|{{s.id}}')">{{s.id}}</a>
 				<div id="{{i}}|{{s.id}}" style="display:none;visibility:hidden">
 					<p> votants : <br />
 							{% for u in s.get_votants() %}
 							{{u.name}} <br />
 							{% endfor %}</p>
-					<input type="button" value="vote" onclick="self.location.href='/vote?id={{s.key().id()}}'"/>
-					<input type="button" value="hide" onclick="javascript:hide('{{i}}|{{s.id}}')" />
+					<input type="button" value="vote" /><input type="button" value="hide" onclick="javascript:hide('{{i}}|{{s.id}}')" />
 				</div>
-			</div>
 			{% endfor %}
 			</div>
 			{% if sugg_enabled %}
@@ -62,4 +74,15 @@
 		<p align="center"><input type="button" value="New step" onclick="self.location.href='/new_step?id={{journey.key().id()}}'"/></p>
 		{% endif %}
     </div>
+	
+	
+<div class="adventure-box" style="width:20%; float:right; overflow:auto; margin-right:1%; max-height=800px;">
+ <h3>Chatbox</h3>
+ <div class="messages"></div>
+ <input type="text" name="New message"/>
+<input type="submit"  value="ok"/>
+ </form></div> 
+ 
+	
+	</div>
 {% endblock %}

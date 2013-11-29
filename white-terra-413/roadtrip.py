@@ -270,7 +270,8 @@ class NewFriends(RoadTripHandler):
     def get(self):
         if self.user:
             journey = Journey.get_by_id(int(self.request.get('id')))
-            self.render('new_friends.html', username=self.user.name, journey = journey)
+            fl = journey.participants
+            self.render('new_friends.html', username=self.user.name, journey = journey, friendlist=fl)
         else:
             self.redirect('/login')
 

@@ -89,7 +89,7 @@ class Journey(db.Model):
 	def get_steps(self):
 		suggs = self.suggestions
 		steps = [];
-		while len(steps) <= self.nbr_steps:
+		while len(steps) < self.nbr_steps:
 				steps.append({'accommodation':[],'food':[]})
 		for suggestion in suggs:
 			url1 = "http://api.outpost.travel/placeRentals?pid=" + suggestion.id

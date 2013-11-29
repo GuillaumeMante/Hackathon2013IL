@@ -1,5 +1,7 @@
 <!DOCTYPE html>
+{% extends "base.html" %}
 
+{% block content %}
 <html>
   <head>
     <title>Login</title>
@@ -11,8 +13,9 @@
   </head>
 
   <body>
-    <h2>Login</h2>
+<div style="width:550px; margin-right:auto; margin-left:auto;">
     <form method="post">
+	    <h3>Login</h3>
       <table>
         <tr>
           <td class="label">
@@ -37,8 +40,10 @@
         {{error}}
       </div>
 
-      <input type="submit">
+      <p align="right"><input type="submit"></p>
     </form>
+	</div>
   </body>
 
 </html>
+  {% endblock %}

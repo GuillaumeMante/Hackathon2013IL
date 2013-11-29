@@ -284,7 +284,22 @@ class Logout(RoadTripHandler):
 
 class Adventure(RoadTripHandler):
 	def get(self):
-		journey = self.response
+		journey = Journey.get_by_id(int(self.request.get('id')))
+		
+		if journey and self.user:
+			error = True
+			for j in self.user.get_journeys():
+				if j.key().id() == journey.key().id():
+					error = False
+					break
+			if error:
+				self.redirect('/')
+			else:
+				
+				self.response.write("OK")
+		else:
+			self.response.write("You fail bro")
+		
 
 app = webapp2.WSGIApplication([('/', MainPage),
                               ('/travel', Travel),
@@ -295,5 +310,6 @@ app = webapp2.WSGIApplication([('/', MainPage),
                                ('/signup', Register),
                                ('/login', Login),
                                ('/logout', Logout),
+							   ('/adventure', Adventure)
                                ],
                               debug=True)

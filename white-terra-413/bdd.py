@@ -19,9 +19,6 @@ def valid_pw(name, password, h):
 	
 def users_key(group = 'default'):
     return db.Key.from_path('users', group)
-	
-def journeys_key(group = 'default'):
-    return db.Key.from_path('journeys', group)
 
 class User(db.Model):
 	name = db.StringProperty(required = True)
@@ -83,10 +80,6 @@ class Journey(db.Model):
 	start = db.StringProperty()
 	end = db.StringProperty()
 	budget = db.IntegerProperty()
-	
-	@classmethod
-	def by_id(cls, uid):
-		return Journey.get_by_id(uid, parent = journeys_key())
 
 	def get_steps(self):
 		suggs = self.suggestions

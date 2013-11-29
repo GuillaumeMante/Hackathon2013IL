@@ -7,7 +7,7 @@
 		<h2>Welcome, {{username}}!</h2>
 		<h3>your Journeys</h3>
 		<p>{% for j in journeys %}
-			<a href="/journeys?id={{j.key().id()}}">{{j.name}}</a><br />
+			<a href="/adventure?id={{j.key().id()}}">{{j.name}}</a><br />
 			{% endfor %}
 		</p>
 		<h3>Invitations received</h3>

@@ -59,8 +59,9 @@ h6{
 display: inline-block;
 	border:2px solid gray;
 	padding: 0.5em;
-	width:96%;
-	margin-bottom:10px;
+	width:400px;
+	margin-bottom:20px;
+	margin-right:10px;
 }
 
 h5{

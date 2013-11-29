@@ -1,35 +1,70 @@
 {% extends "base.html" %}
 
 {% block content %}
-
+	<script type="text/javascript">
+		function show(id){
+			var el = document.getElementById(id);
+			el.style.display="block";
+			el.style.visibility="visible";
+		}
+		function hide(id){
+			var el = document.getElementById(id);
+			el.style.display="none";
+			el.style.visibility="hidden";
+		}
+	</script>
    <div class="box" style="width:600px; margin-right:auto; margin-left:auto;">
 		<h3>{{journey.name}}</h3>
 		{% for i in range(0,length) %}
 		<div class="step"><h6>Step {{i + 1}}</h6>
 			<h5>Places</h5>
-			<p>{% for s in steps[i]['place'] %}
-				{{s.id}}<input type="button" value="vote" />
+			<div>{% for s in steps[i]['place'] %}
+				<a onclick="javascript:show('{{i}}|{{s.id}}')">{{s.id}}</a>
+				<div id="{{i}}|{{s.id}}" style="display:none;visibility:hidden">
+					<p> votants : <br />
+					{% for u in s.get_votants() %}
+					{{u.name}} <br />
+					{% endfor %}</p>
+					<input type="button" value="vote" /><input type="button" value="hide" onclick="javascript:hide('{{i}}|{{s.id}}')" />
+				</div>
 			{% endfor %}
+			</div>
 			{% if sugg_enabled %}
 			<p align="right"><input type="button" value="Add suggestion" /></p>
 			{% endif %}
-			</p>
+			
 			<h5>Accommodations</h5>
-			<p>{% for s in steps[i]['accommodation'] %}
-			{{s.id}}<input type="button" value="vote" />
+			<div>{% for s in steps[i]['accommodation'] %}
+				<a onclick="javascript:show('{{i}}|{{s.id}}')">{{s.id}}</a>
+				<div id="{{i}}|{{s.id}}" style="display:none;visibility:hidden">
+					<p> votants : <br />
+					{% for u in s.get_votants() %}
+					{{u.name}} <br />
+					{% endfor %}</p>
+					<input type="button" value="vote" /><input type="button" value="hide" onclick="javascript:hide('{{i}}|{{s.id}}')" />
+				</div>
 			{% endfor %}
+			</div>
 			{% if sugg_enabled %}
 			<p align="right"><input type="button" value="Add suggestion" /></p>
 			{% endif %}
-			</p>
+			
 			<h5>Food</h5>
-			<p>{% for s in steps[i]['food'] %}
-			{{s.id}}<input type="button" value="vote" />
+			<div>{% for s in steps[i]['food'] %}
+				<a onclick="javascript:show('{{i}}|{{s.id}}')">{{s.id}}</a>
+				<div id="{{i}}|{{s.id}}" style="display:none;visibility:hidden">
+					<p> votants : <br />
+							{% for u in s.get_votants() %}
+							{{u.name}} <br />
+							{% endfor %}</p>
+					<input type="button" value="vote" /><input type="button" value="hide" onclick="javascript:hide('{{i}}|{{s.id}}')" />
+				</div>
 			{% endfor %}
+			</div>
 			{% if sugg_enabled %}
 			<p align="right"><input type="button" value="Add suggestion" /></p>
 			{% endif %}
-			</p>
+			
 		</div>
 		{% endfor %}
 		{% if sugg_enabled %}

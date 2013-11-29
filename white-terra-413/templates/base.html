@@ -1,10 +1,17 @@
 <!DOCTYPE html>
 <html>
-<br>
-<br>
-<br>
  
-  <div class="login-area">
+ 
+  
+<head>
+  <link type="text/css" rel="stylesheet" href="/static/main.css" />
+  <link rel="shortcut icon" href="favicon.ico"/>
+
+  <title>An Expected Journey</title>
+</head>
+
+<body>
+ <div class="login-area">
    {% if user %} {{user.name}} (<a class="login-link" href="/logout">Logout</a>)
     {% else %}
       <a class="login-link" href="/login">Login</a>
@@ -14,24 +21,15 @@
   </div>
   
    <div class="homepage">  
-<a class="hompage"href="/">Homepage</a>
+	<a class="hompage" href="/">Homepage</a>
   </div>
-  
-<head> <p align="center">  
-  <link type="text/css" rel="stylesheet" href="/static/main.css" />
-  <link rel="shortcut icon" href="favicon.ico"/>
-
-  <title>An Expected Journey</title>
-</head>
-
-<body>
   <a class="main-title">
 
      <IMG SRC="/static/images/ring.png"
  WIDTH=60
  HEIGHT=60> An Expected Journey <IMG SRC="/static/images/frodo.png"
  WIDTH=60
- HEIGHT=60>
+ HEIGHT=60 />
 
   </a>
     <div id="content">

@@ -147,7 +147,7 @@ class New_adventure(RoadTripHandler):
             if have_error:
                 self.render('new_adventure.html', **params)
             else:
-                journey = Journey(owner = self.user, name = self.name, start = self.date_debut, end = self.date_fin, budget = int(self.budget), nbr_steps = 0, enable_sugg = False)
+                journey = Journey(owner = self.user, name = self.name, start = self.date_debut, end = self.date_fin, budget = int(self.budget), nbr_steps = 1, enable_sugg = False)
                 journey.put()
                 participant = Participant(journey = journey, user = self.user)
                 participant.put()

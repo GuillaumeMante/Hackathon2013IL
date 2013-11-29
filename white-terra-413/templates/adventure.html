@@ -24,18 +24,22 @@
 		<div class="step"><h6>Step {{i + 1}}</h6>
 			<h5>Accommodations</h5>
 			<div>{% for s in steps[i]['accommodation'] %}
-				<div>
-				<a onclick="javascript:show('{{i}}|{{s[0].id}}')">{{s[1]}}</a>
+				<div class="contacc" style="border:1px solid gray;">
+				<div class="titleacc" style="color:blue"> <a onclick="javascript:show('{{i}}|{{s[0].id}}')">{{s[1]}}</a></div>
 				<div id="{{i}}|{{s[0].id}}" style="display:none;visibility:hidden">
-					<a href={{s[3]}}> view announce </a><br />
-					{{s[2]}}
-					<br />
-					<p> votants : <br />
+					<input type="button" value="Vote" onclick="self.location.href='/vote?id={{s[0].key().id()}}'"/>
+					<input type="button" value="Hide" onclick="javascript:hide('{{i}}|{{s[0].id}}')" />
+					  <a href={{s[3]}}>View announce</a><br />
+					<p> Voters : <br />
+
 					{% for u in s[0].get_votants() %}
 					{{u.name}} <br />
 					{% endfor %}</p>
-					<input type="button" value="vote" onclick="self.location.href='/vote?id={{s[0].key().id()}}'"/>
-					<input type="button" value="hide" onclick="javascript:hide('{{i}}|{{s[0].id}}')" />
+					
+					
+				
+
+					
 				</div>
 				</div>
 			{% endfor %}

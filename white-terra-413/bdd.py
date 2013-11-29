@@ -61,6 +61,21 @@ class User(db.Model):
 		for i in self.journeys:
 			journeys.append(i.journey)
 		return journeys
+		
+	def get_friends(self):
+		friends = []
+		for f in self.friends1:
+			friends.append(f.user2)
+		for f in self.friends2:
+			friends.append(f.user1)
+		return friends;
+		
+	def add_friend(self, user):
+		if user in self.get_friends():
+			return
+		else:
+			friend = Friend(self, user)
+			friend.put()
 
 class Journey(db.Model):
 	owner = db.ReferenceProperty(User, required = True)
@@ -73,7 +88,7 @@ class Journey(db.Model):
 	def by_id(cls, uid):
 		return Journey.get_by_id(uid, parent = journeys_key())
 
-	def getSteps(self):
+	def get_steps(self):
 		suggs = self.suggestions
 		steps = [];
 		for suggestion in suggs:
@@ -98,7 +113,7 @@ class Suggestion(db.Model):
 	step = db.IntegerProperty(required = True)
 	type = db.StringProperty(required=True, choices=set(["place", "accommodation", "food"]))
 	id = db.StringProperty(required = True)
-	def getVotes(self):
+	def get_votants(self):
 		votes = []
 		for v in self.votes:
 			votes.append(v.user)
@@ -108,6 +123,18 @@ class Suggestion(db.Model):
 		for v in self.votes:
 			delete(v)
 		delete(self)
+		
+	def vote(self, user):
+		suggestions = self.journey.suggestions
+		for s in suggestion:
+			if s.step != self.step or s.type != self.type:
+				suggestion.remove(s)
+		for s in suggestions:
+			for v in s.votes:
+				if v.user == user:
+					delete(v)
+		vote = Vote(user = user, suggestion = self)
+		vote.put()
 
 class Vote(db.Model):
 	user = db.ReferenceProperty(User, required = True, collection_name="user_votes")
@@ -127,3 +154,7 @@ class Message(db.Model):
 	author = db.ReferenceProperty(User, required = True)
 	journey = db.ReferenceProperty(Journey, required = True, collection_name="messages")
 	message = message = db.StringProperty(multiline=True)
+	
+class Friend(db.Model):
+	user1 = db.ReferenceProperty(User, required = True, collection_name="friends1")
+	user2 = db.ReferenceProperty(User, required = True, collection_name="friends2")

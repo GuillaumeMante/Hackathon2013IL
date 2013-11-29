@@ -130,11 +130,12 @@ class New_adventure(RoadTripHandler):
             self.date_debut = self.request.get('date_debut')
             self.date_fin = self.request.get('date_fin')
             self.budget = self.request.get('budget')
-
+            self.name = self.request.get('name')
             params = dict(date_debut = self.date_debut,
                           date_fin = self.date_fin,
                           budget = self.budget)
-
+            if not self.name:
+                self.name = "journey from " + self.date_debut + " to " + self.date_fin
             if not valid_date(self.date_debut):
                 params['error_date_debut'] = "Ceci n'est pas une date valide."
                 have_error = True
@@ -150,7 +151,7 @@ class New_adventure(RoadTripHandler):
             if have_error:
                 self.render('new_adventure.html', **params)
             else:
-                journey = Journey(owner = self.user, name = "hey it miss a field to give a name to this wonderful journey", start = self.date_debut, end = self.date_fin, budget = int(self.budget))
+                journey = Journey(owner = self.user, name = self.name, start = self.date_debut, end = self.date_fin, budget = int(self.budget))
                 journey.put()
                 participant = Participant(journey = journey, user = self.user)
                 participant.put()
@@ -281,6 +282,9 @@ class Logout(RoadTripHandler):
         self.logout()
         self.redirect('/travel')
 
+class Adventure(RoadTripHandler):
+	def get(self):
+		journey = self.response
 
 app = webapp2.WSGIApplication([('/', MainPage),
                               ('/travel', Travel),

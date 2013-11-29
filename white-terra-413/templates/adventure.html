@@ -71,7 +71,7 @@
  <form method="post" action="#" style="width:90%; margin=0;padding:0.4em; border-radius: 10px;overflow:auto;">
  <div class="messages">
     {% for m in messages %}
-	<div class="message" style="border:1px solid gray;padding:0.1em;margin-bottom:10px;">
+	<div class="message" style="border:1px solid gray;padding:0.1em;margin-bottom:10px;width: 100%;word-wrap: break-word;;">
      <h7>{{m.author.name}} says :</h7>
       <div style="font-weight:normal;">  {{m.message}}</div>
 	 </div>

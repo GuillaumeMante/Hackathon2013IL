@@ -3,6 +3,9 @@ import random
 import hashlib
 from google.appengine.ext import webapp
 from google.appengine.ext import db
+import urllib
+import urllib2
+import json
 
 def make_salt(length = 5):
     return ''.join(random.choice(letters) for x in xrange(length))
@@ -87,9 +90,12 @@ class Journey(db.Model):
 		suggs = self.suggestions
 		steps = [];
 		while len(steps) < self.nbr_steps:
-				steps.append({'accomodation':[],'food':[]})
+				steps.append({'accommodation':[],'food':[]})
 		for suggestion in suggs:
-			steps[suggestion.step-1][suggestion.type].append(suggestion)
+			url1 = "http://api.outpost.travel/placeRentals/" + suggestion.id
+			response1 = urllib2.urlopen(url1)
+			data1 = json.load(response1)
+			steps[suggestion.step-1][suggestion.type].append([suggestion, data1])
 		return steps;
 	
 	def delete(self):
@@ -149,6 +155,7 @@ class Message(db.Model):
 	author = db.ReferenceProperty(User, required = True)
 	journey = db.ReferenceProperty(Journey, required = True, collection_name="messages")
 	message = message = db.StringProperty(multiline=True)
+	created = db.DateTimeProperty(auto_now_add = True)
 	
 class Friend(db.Model):
 	user1 = db.ReferenceProperty(User, required = True, collection_name="friends1")

@@ -22,26 +22,31 @@
 	<TD valign="top"style="width:50%;">
    <div style="display:inline-block;margin-top:30px;float: left;">
         <br>
-		
-         <form style="width:100%;">
-       Total Results : {{totalresults}}
+
+         <div class="box">
+       TOTAL RESULTS : {{totalresults}}
              <br>
         {{erreur}}
-          </form>
-        <form methode="get" action="adventure"  style="width:100%;">
+          </div>
+        <form method="post" action="/adventure?id={{journey.key().id()}}">
+		
            <table>
         {% for i in tabblockannonce %}
                <tr>
                  <td>
                      <p>
-                         <INPUT type="hidden" name="id" value={{i["pid"]}} readonly> Occupancy : {{i["occupancy"]}} , MinimumStayNight : {{i["minimumStayNight"]}}, Price :{{i["price"]}}
-                         <input type="submit"  value="Choose">
+						 <label for="{{i['pid']}}">
+						 <input type="radio" name="accommodation" id="{{i['pid']}}" value="{{i['pid']}}" />
+						 Occupancy : {{i["occupancy"]}} , MinimumStayNight : {{i["minimumStayNight"]}}, Price :{{i["price"]}}
+						 </label>
                      </p>
                      <br>
                  </td>
                 </tr>
         {% endfor %}
          </table>
+		 <input type="hidden" value="{{step}}" name="step" />
+		 <input type="submit" value="choose" />
         </form>
     </div></TD> </TR> 
 </table>

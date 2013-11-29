@@ -99,37 +99,13 @@ class RoadTripHandler(webapp2.RequestHandler):
         else:
             self.format = 'html'
 
-
 class MainPage(RoadTripHandler):
 
     def get(self):
-	    self.render('front.html')
-
-
-def make_salt(length = 5):
-    return ''.join(random.choice(letters) for x in xrange(length))
-
-def make_pw_hash(name, pw, salt = None):
-    if not salt:
-        salt = make_salt()
-    h = hashlib.sha256(name + pw + salt).hexdigest()
-    return '%s,%s' % (salt, h)
-
-def valid_pw(name, password, h):
-    salt = h.split(',')[0]
-    return h == make_pw_hash(name, password, salt)
-
-def users_key(group = 'default'):
-    return db.Key.from_path('users', group)
-
-
-
-class Welcome(RoadTripHandler):
-    def get(self):
-        if self.user:
-            self.render('welcome.html', username = self.user.name)
-        else:
-            self.redirect('/signup')
+		if self.user:
+			self.render('front.html', user = self.user, journeys = self.user.get_journeys(), invitations = self.user.get_invitations())
+		else:
+			self.render('front.html', user = None, journeys = None, invitations = None)
 
 DATE_RE = re.compile(r'(\d+/\d+/\d+)')
 def valid_date(date):
@@ -144,36 +120,38 @@ class New_adventure(RoadTripHandler):
         if self.user:
             self.render('new_adventure.html', username = self.user.name)
         else:
-            self.redirect('/signup')
+            self.redirect('/login')
     def post(self):
             have_error = False
             self.date_debut = self.request.get('date_debut')
             self.date_fin = self.request.get('date_fin')
             self.budget = self.request.get('budget')
-
+            self.name = self.request.get('name')
             params = dict(date_debut = self.date_debut,
                           date_fin = self.date_fin,
                           budget = self.budget)
-
+            if not self.name:
+                self.name = "journey from " + self.date_debut + " to " + self.date_fin
             if not valid_date(self.date_debut):
-                params['error_date_debut'] = "Ceci n'est pas une date valide."
+                params['error_date_debut'] = "Date not valid."
                 have_error = True
 
             if not valid_date(self.date_fin):
-                params['error_date_fin'] = "Ceci n'est pas une date valide."
+                params['error_date_fin'] = "Date not valid."
                 have_error = True
 
             if not valid_budget(self.budget):
-                params['error_budget'] = "Ceci n'est pas un budget valide."
+                params['error_budget'] ="Budget not valid."
                 have_error = True
 
             if have_error:
                 self.render('new_adventure.html', **params)
             else:
+                journey = Journey(owner = self.user, name = self.name, start = self.date_debut, end = self.date_fin, budget = int(self.budget), nbr_steps = 1, enable_sugg = False)
+                journey.put()
+                participant = Participant(journey = journey, user = self.user)
+                participant.put()
                 self.redirect('new_friends')
-
-    def done(self, *a, **kw):
-        raise NotImplementedError
 
 #Fonctionement de l'api Outpost.Travel
 class Travel(RoadTripHandler):
@@ -185,14 +163,79 @@ class Travel(RoadTripHandler):
             page=json.dumps(data['page'])
             self.render('travel.html',page=page)
         else:
-            self.redirect('/signup')
+            self.redirect('/login')
 
-class New_friends(RoadTripHandler):
+class New_etape(RoadTripHandler):
     def get(self):
         if self.user:
-            self.render('new_friends.html', username = self.user.name)
+            self.render('new_etape.html', username = self.user.name)
         else:
-            self.redirect('/signup')
+            self.redirect('/login')
+
+    def post(self):
+        self.destination = self.request.get('destination')
+        #mettre une majuscule au debut
+        destination = self.destination
+        destination = destination.lower()
+        destination = destination.title()
+        url1 = "http://api.outpost.travel/placeRentals?city="+destination
+        response1 = urllib2.urlopen(url1)
+        data1 = json.load(response1)
+        totalresults=json.dumps(data1['totalResults'])
+        totalpage=json.dumps(data1['totalPages'])
+        tabblockannonce=[]
+        test=0
+        erreur=""
+        if int(totalresults)==0:
+            erreur="No location availaible"
+        if int(totalpage)==1:
+            url2=url1+"&page=1"
+            response2 = urllib2.urlopen(url2)
+            data2 = json.load(response2)
+            nb_per_page=""
+            nb_per_page=json.dumps(data2['totalResults'])
+            test=nb_per_page
+            for i in range(0,int(nb_per_page)):
+                blockannonce={}
+                blockannonce["minimumStayNight"] = json.dumps(data2['items'][i]['minimumStayNight'])
+                blockannonce["occupancy"] = json.dumps(data2['items'][i]['occupancy'])
+                blockannonce["pid"] = json.dumps(data2['items'][i]['pid'])
+                tabblockannonce.append(blockannonce)
+        else:
+
+            for j in range(1,int(totalpage)):
+                url2=url1+"&page="+str(j)
+                response2 = urllib2.urlopen(url2)
+                data2 = json.load(response2)
+                nb_per_page=""
+                nb_per_page=json.dumps(data2['resultsPerPage'])
+                test=nb_per_page
+                for i in range(0,int(nb_per_page)):
+                    blockannonce={}
+                    blockannonce["minimumStayNight"] = json.dumps(data2['items'][i]['minimumStayNight'])
+                    blockannonce["occupancy"] = json.dumps(data2['items'][i]['occupancy'])
+                    blockannonce["pid"] = json.dumps(data2['items'][i]['pid'])
+                    tabblockannonce.append(blockannonce)
+
+            url3=url1+"&page="+totalpage
+            response3 = urllib2.urlopen(url3)
+            data3 = json.load(response3)
+            nb_per_page2=""
+            nb_per_page2=json.dumps(data3['resultsPerPage'])
+            nb_annonce_fin=0
+            nb_annonce_fin=int(totalresults)%int(nb_per_page2)
+            for k in range(0,nb_annonce_fin):
+                    blockannonce={}
+                    blockannonce["minimumStayNight"] = json.dumps(data3['items'][k]['minimumStayNight'])
+                    blockannonce["occupancy"] = json.dumps(data3['items'][k]['occupancy'])
+                    blockannonce["pid"] = json.dumps(data3['items'][k]['pid'])
+                    tabblockannonce.append(blockannonce)
+
+
+        self.render('new_etape.html',username = self.user.name,totalresults=totalresults,tabblockannonce=tabblockannonce,test=test,erreur=erreur);
+
+
+
 
 USER_RE = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
 def valid_username(username):
@@ -256,7 +299,7 @@ class Register(Signup):
             u.put()
 
             self.login(u)
-            self.redirect('/welcome?username='+str(self.username))
+            self.redirect('/')
 
 class Login(RoadTripHandler):
     def get(self):
@@ -269,7 +312,7 @@ class Login(RoadTripHandler):
         u = User.login(username, password)
         if u:
             self.login(u)
-            self.redirect('/welcome')
+            self.redirect('/')
         else:
             msg = 'Invalid login'
             self.render('login-form.html', error = msg)
@@ -279,14 +322,74 @@ class Logout(RoadTripHandler):
         self.logout()
         self.redirect('/travel')
 
+class Adventure(RoadTripHandler):
+	def get(self):
+		journey = Journey.get_by_id(int(self.request.get('id')))
+
+		if journey and self.user:
+			error = True
+			for j in self.user.get_journeys():
+				if j.key().id() == journey.key().id():
+					error = False
+					break
+			if error:
+				self.redirect('/')
+			else:
+				steps = journey.get_steps()
+				self.render('adventure.html', length = len(steps), steps = steps, journey = journey, sugg_enabled = journey.enable_sugg or journey.owner.key().id() == self.user.key().id())
+		else:
+			self.redirect('/')
+
+
+class NewFriends(RoadTripHandler):
+    def get(self):
+        if self.user:
+            self.render('new_friends.html', username=self.user.name)
+        else:
+            self.redirect('/login')
+
+    def post(self):
+
+        if self.request.get('friendname'):
+            friendname = User.by_name(self.request.get('friendname'))
+            fl = self.user.get_friends()
+            if friendname:
+                self.user.add_friend(friendname)
+                #participant=Participant(journey=
+                self.render('new_friends.html', friendlist=fl)
+            else:
+                msg = 'No such guy here'
+                self.render('new_friends.html', friendlist=fl, error=msg)
+        else:
+            self.render('new_friends.html', error='That\'s not a name')
+
+class NewStep(RoadTripHandler):
+    def get(self):
+		journey = Journey.get_by_id(int(self.request.get('id')))
+		if journey and self.user:
+			error = True
+			for j in self.user.get_journeys():
+				if j.key().id() == journey.key().id():
+					error = False
+					break
+			if error:
+				self.redirect('/')
+			else:
+				journey.nbr_steps = journey.nbr_steps + 1
+				journey.put()
+				self.redirect('/adventure?id=' + self.request.get('id'))
+		else:
+			self.redirect('/')
 
 app = webapp2.WSGIApplication([('/', MainPage),
                               ('/travel', Travel),
-                               ('/new_friends', New_friends),
+                               ('/new_friends', NewFriends),
+                               ('/new_etape', New_etape),
                               ('/new_adventure', New_adventure),
-                              ('/welcome', Welcome),
                                ('/signup', Register),
                                ('/login', Login),
                                ('/logout', Logout),
+							   ('/adventure', Adventure),
+							   ('/new_step', NewStep)
                                ],
                               debug=True)

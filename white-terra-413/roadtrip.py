@@ -269,24 +269,26 @@ class New_etape(RoadTripHandler):
 class NewFriends(RoadTripHandler):
     def get(self):
         if self.user:
-            self.render('new_friends.html', username=self.user.name)
+            journey = Journey.get_by_id(int(self.request.get('id')))
+            self.render('new_friends.html', username=self.user.name, journey = journey)
         else:
             self.redirect('/login')
 
     def post(self):
-
+        journey = Journey.get_by_id(int(self.request.get('id')))
         if self.request.get('friendname'):
             friendname = User.by_name(self.request.get('friendname'))
-            fl = self.user.get_friends()
+            fl = journey.participants
             if friendname:
-                self.user.add_friend(friendname)
-                #participant=Participant(journey=
-                self.render('new_friends.html', friendlist=fl)
+                journey = Journey.get_by_id(int(self.request.get('id')))
+                participant=Participant(journey=journey, user = friendname)
+                participant.put()
+                self.render('new_friends.html', friendlist=fl, journey = journey)
             else:
                 msg = 'No such guy here'
-                self.render('new_friends.html', friendlist=fl, error=msg)
+                self.render('new_friends.html', friendlist=fl, error=msg, journey = journey)
         else:
-            self.render('new_friends.html', error='That\'s not a name')
+            self.render('new_friends.html', error='That\'s not a name', journey = journey)
 
 USER_RE = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
 def valid_username(username):

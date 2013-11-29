@@ -9,7 +9,7 @@
         {% for i in friendlist %}
                <tr>
                  <td>
-                     Name : {{i.name}}
+                     Name : {{i.user.name}}
                      <br>
                  </td>
                 </tr>
@@ -20,7 +20,7 @@
      <p> Unfortunately, you have no friends yet.</p>
     {% endif %}
 
-    <form method="post">
+    <form method="post" action="/new_friends?id={{journey.key().id()}}">
         <table>
             <tr>
             <td class="label">

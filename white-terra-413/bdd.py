@@ -71,7 +71,7 @@ class User(db.Model):
 		if user in self.get_friends():
 			return
 		else:
-			friend = Friend(self, user)
+			friend = Friend(user1 = self, user2 = user)
 			friend.put()
 
 class Journey(db.Model):

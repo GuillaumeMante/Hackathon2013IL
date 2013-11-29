@@ -106,7 +106,7 @@ class MainPage(RoadTripHandler):
 			self.render('front.html', user = self.user, journeys = self.user.get_journeys(), invitations = self.user.get_invitations())
 		else:
 			self.render('front.html', user = None, journeys = None, invitations = None)
-			
+
 DATE_RE = re.compile(r'(\d+/\d+/\d+)')
 def valid_date(date):
     return date and DATE_RE.match(date)
@@ -164,13 +164,6 @@ class Travel(RoadTripHandler):
             self.render('travel.html',page=page)
         else:
             self.redirect('/login')
-
-class New_friends(RoadTripHandler):
-	def get(self):
-		if self.user:
-			self.render('new_friends.html', username = self.user.name)
-		else:
-			self.redirect('/login')
 
 class New_etape(RoadTripHandler):
     def get(self):
@@ -332,7 +325,7 @@ class Logout(RoadTripHandler):
 class Adventure(RoadTripHandler):
 	def get(self):
 		journey = Journey.get_by_id(int(self.request.get('id')))
-		
+
 		if journey and self.user:
 			error = True
 			for j in self.user.get_journeys():
@@ -346,9 +339,31 @@ class Adventure(RoadTripHandler):
 				self.render('adventure.html', length = len(steps), steps = steps, journey = journey, sugg_enabled = journey.enable_sugg or journey.owner.key().id() == self.user.key().id())
 		else:
 			self.redirect('/')
-		
+
+
+class NewFriends(RoadTripHandler):
+    def get(self):
+        if self.user:
+            self.render('new_friends.html', username=self.user.name)
+        else:
+            self.redirect('/login')
+
+    def post(self):
+
+        if self.request.get('friendname'):
+            friendname = User.by_name(self.request.get('friendname'))
+            fl = self.user.get_friends()
+            if friendname:
+                self.user.add_friend(friendname)
+                self.render('new_friends.html', friendlist=fl)
+            else:
+                msg = 'No such guy here'
+                self.render('new_friends.html', friendlist=fl, error=msg)
+        else:
+            self.render('new_friends.html', error='That\'s not a name')
+
 class NewStep(RoadTripHandler):
-	def get(self):
+    def get(self):
 		journey = Journey.get_by_id(int(self.request.get('id')))
 		if journey and self.user:
 			error = True
@@ -367,7 +382,7 @@ class NewStep(RoadTripHandler):
 
 app = webapp2.WSGIApplication([('/', MainPage),
                               ('/travel', Travel),
-                               ('/new_friends', New_friends),
+                               ('/new_friends', NewFriends),
                                ('/new_etape', New_etape),
                               ('/new_adventure', New_adventure),
                                ('/signup', Register),

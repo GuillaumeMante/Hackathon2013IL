@@ -117,42 +117,43 @@ def valid_budget(budget):
 	return budget and BUDGET_RE.match(budget)
 
 class New_adventure(RoadTripHandler):
-	def get(self):
-		if self.user:
-			self.render('new_adventure.html', username = self.user.name)
-		else:
-			self.redirect('/login')
-	def post(self):
-			have_error = False
-			self.date_debut = self.request.get('date_debut')
-			self.date_fin = self.request.get('date_fin')
-			self.budget = self.request.get('budget')
-			self.name = self.request.get('name')
-			params = dict(date_debut = self.date_debut,
-						  date_fin = self.date_fin,
-						  budget = self.budget)
-			if not self.name:
-				self.name = "journey from " + self.date_debut + " to " + self.date_fin
-			if not valid_date(self.date_debut):
-				params['error_date_debut'] = "Date not valid."
-				have_error = True
+    def get(self):
+        if self.user:
+            self.render('new_adventure.html', username = self.user.name)
+        else:
+            self.redirect('/login')
+    def post(self):
+            have_error = False
+            self.date_debut = self.request.get('date_debut')
+            self.date_fin = self.request.get('date_fin')
+            self.budget = self.request.get('budget')
+            self.name = self.request.get('name')
+            params = dict(date_debut = self.date_debut,
+                          date_fin = self.date_fin,
+                          budget = self.budget)
+            if not self.name:
+                self.name = "journey from " + self.date_debut + " to " + self.date_fin
+            if not valid_date(self.date_debut):
+                params['error_date_debut'] = "Date not valid."
+                have_error = True
 
-			if not valid_date(self.date_fin):
-				params['error_date_fin'] = "Date not valid."
-				have_error = True
+            if not valid_date(self.date_fin):
+                params['error_date_fin'] = "Date not valid."
+                have_error = True
 
-			if not valid_budget(self.budget):
-				params['error_budget'] ="Budget not valid."
-				have_error = True
+            if not valid_budget(self.budget):
+                params['error_budget'] ="Budget not valid."
+                have_error = True
 
-			if have_error:
-				self.render('new_adventure.html', **params)
-			else:
-				journey = Journey(owner = self.user, name = self.name, start = self.date_debut, end = self.date_fin, budget = int(self.budget), nbr_steps = 1, enable_sugg = False)
-				journey.put()
-				participant = Participant(journey = journey, user = self.user)
-				participant.put()
-				self.redirect('new_friends')
+            if have_error:
+                self.render('new_adventure.html', **params)
+            else:
+                journey = Journey(owner = self.user, name = self.name, start = self.date_debut, end = self.date_fin, budget = int(self.budget), nbr_steps = 1, enable_sugg = False)
+                journey.put()
+                participant = Participant(journey = journey, user = self.user)
+                participant.put()
+                self.redirect('new_friends?id=' + str(journey.key().id()))
+
 
 #Fonctionement de l'api Outpost.Travel
 class Travel(RoadTripHandler):
@@ -268,24 +269,26 @@ class New_etape(RoadTripHandler):
 class NewFriends(RoadTripHandler):
     def get(self):
         if self.user:
-            self.render('new_friends.html', username=self.user.name)
+            journey = Journey.get_by_id(int(self.request.get('id')))
+            self.render('new_friends.html', username=self.user.name, journey=journey)
         else:
             self.redirect('/login')
 
     def post(self):
-
+        journey = Journey.get_by_id(int(self.request.get('id')))
         if self.request.get('friendname'):
             friendname = User.by_name(self.request.get('friendname'))
-            fl = self.user.get_friends()
+            fl = journey.participants
             if friendname:
-                self.user.add_friend(friendname)
-                #participant=Participant(journey=
-                self.render('new_friends.html', friendlist=fl)
+                journey = Journey.get_by_id(int(self.request.get('id')))
+                participant = Participant(journey=journey, user=friendname)
+                participant.put()
+                self.render('new_friends.html', friendlist=fl, journey=journey)
             else:
                 msg = 'No such guy here'
-                self.render('new_friends.html', friendlist=fl, error=msg)
+                self.render('new_friends.html', friendlist=fl, error=msg, journey = journey)
         else:
-            self.render('new_friends.html', error='That\'s not a name')
+            self.render('new_friends.html', error='That\'s not a name', journey = journey)
 
 USER_RE = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
 def valid_username(username):
@@ -406,20 +409,21 @@ class Adventure(RoadTripHandler):
 			else:
 				if self.request.get('accommodation'):
 					acc = self.request.get('accommodation')
+					acc = acc[1:len(acc)-1]
 					step = int(self.request.get('step'))
 					steps = journey.get_steps()
-					for s in steps[step-1]['accommodation'][0]:
-						if s.id == self.request.get('accommodation'):
+					for s in steps[step-1]['accommodation']:
+						if s[0].id == acc:
 							error = True
 							break
 					if not error:
 						s = Suggestion(journey = journey, step = step, type = 'accommodation', id = acc)
 						s.put()
-						url1 = "http://api.outpost.travel/placeRentals/" + acc
+						url1 = "http://api.outpost.travel/placeRentals?pid=" + acc
 						response1 = urllib2.urlopen(url1)
 						data1 = json.load(response1)
-						steps[step-1]['accommodation'].append([s, data1])
-						self.render('adventure.html', length = len(steps), steps = steps, journey = journey, sugg_enabled = journey.enable_sugg or journey.owner.key().id() == self.user.key().id())
+						steps[step-1]['accommodation'].append([s,json.dumps(data1['items'][0]['heading']), json.dumps(data1['items'][0]['description']), json.dumps(data1['items'][0]['link'])])
+					self.render('adventure.html', length = len(steps), steps = steps, journey = journey, sugg_enabled = journey.enable_sugg or journey.owner.key().id() == self.user.key().id())
 				else:
 					journey = Journey.get_by_id(int(self.request.get('id')))
 					self.new_message = self.request.get('New message')

@@ -23,8 +23,9 @@
 			<h5>Accommodations</h5>
 			<div>{% for s in steps[i]['accommodation'] %}
 				<div>
-				<a onclick="javascript:show('{{i}}|{{s[0].id}}')">{{s[0].id}}</a>
+				<a onclick="javascript:show('{{i}}|{{s[0].id}}')">{{s[1]}}</a>
 				<div id="{{i}}|{{s[0].id}}" style="display:none;visibility:hidden">
+					{{s[2]}}
 					<p> votants : <br />
 					{% for u in s[0].get_votants() %}
 					{{u.name}} <br />

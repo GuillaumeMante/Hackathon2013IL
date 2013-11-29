@@ -421,11 +421,13 @@ class Adventure(RoadTripHandler):
 						data1 = json.load(response1)
 						steps[step-1]['accommodation'].append([s,json.dumps(data1['items'][0]['heading']), json.dumps(data1['items'][0]['description']), json.dumps(data1['items'][0]['link'])])
 					self.render('adventure.html', length = len(steps), steps = steps, journey = journey, sugg_enabled = journey.enable_sugg or journey.owner.key().id() == self.user.key().id())
-				else:
+				elif self.request.get('New message'):
 					journey = Journey.get_by_id(int(self.request.get('id')))
 					self.new_message = self.request.get('New message')
 					m = Message(journey = journey, author=self.user, message=self.new_message)
 					m.put()
+					self.redirect('/adventure?id='+self.request.get('id'))
+				else:
 					self.redirect('/adventure?id='+self.request.get('id'))
 		else:
 			self.redirect('/')

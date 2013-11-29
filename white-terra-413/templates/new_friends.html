@@ -1,10 +1,32 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Your Fellowship</h1>
+ <div class="adventure-box" style="float:center">
+    
+	<h3>Your Fellowship</h3>
+	
+	<form method="post" action="/new_friends?id={{journey.key().id()}}"  style="float:left;margin-top:0px;width:95%;">
+        <table>
+            <tr>
+            <td class="label" style="font-size:34px;">
+                Username : 
+            </td>
+            <td>
+                <input type="text" name="friendname" value=""style="height:34px;width:300px;">
+            </td>
+			<td>
+			<p> <input type="submit"  value="Add"> </p> </td>
+            </tr>
+        </table>
+        <div class="error">
+            {{error}}
+        </div>
+         
+    </form>
     {% if friendlist%}
-     <p> Here are your comrades</p>
-      <form methode="post">
+	 <div class="box" style="float:left;margin-top:0px;width:95%;margin-left:0;">
+     <h5> Here are your comrades</h5>
+      <form method="post"  style="width:90%;margin-top:20px;">
            <table>
         {% for i in friendlist %}
                <tr>
@@ -16,29 +38,14 @@
         {% endfor %}
          </table>
         </form>
+		</div>
     {% else %}
-     <p> Unfortunately, you have no friends yet.</p>
-    {% endif %}
+     <h5> Unfortunately, you have no friends yet.</h5>
+    {% endif %}    
 
-    <form method="post" action="/new_friends?id={{journey.key().id()}}">
-        <table>
-            <tr>
-            <td class="label">
-                Username
-            </td>
-            <td>
-                <input type="text" name="friendname" value="">
-            </td>
-            </tr>
-        </table>
-        <div class="error">
-            {{error}}
-        </div>
-         <p> <input type="submit"  value="Validate"> </p>
-    </form>
-
-    <form method="post" action="/adventure?id={{journey.key().id()}}">
-        <input type="submit"  value="Continue">
+    <form method="post" action="/adventure?id={{journey.key().id()}}" style="width=300px;margin-top:0px;float:center;">
+        <input type="submit"  value="Continue"style="font-size:60px;height:80px;
+	width:300px;">
     </form>
     </div>
 {% endblock %}

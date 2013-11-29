@@ -104,8 +104,9 @@ class MainPage(RoadTripHandler):
     def get(self):
 		if self.user:
 			self.render('front.html', user = self.user, journeys = self.user.get_journeys(), invitations = self.user.get_invitations())
-		else
+		else:
 			self.render('front.html', user = None, journeys = None, invitations = None)
+			
 DATE_RE = re.compile(r'(\d+/\d+/\d+)')
 def valid_date(date):
     return date and DATE_RE.match(date)
@@ -146,7 +147,7 @@ class New_adventure(RoadTripHandler):
             if have_error:
                 self.render('new_adventure.html', **params)
             else:
-                journey = Journey(owner = self.user, name = self.name, start = self.date_debut, end = self.date_fin, budget = int(self.budget), nbr_steps = 0)
+                journey = Journey(owner = self.user, name = self.name, start = self.date_debut, end = self.date_fin, budget = int(self.budget), nbr_steps = 0, enable_sugg = False)
                 journey.put()
                 participant = Participant(journey = journey, user = self.user)
                 participant.put()
@@ -291,10 +292,27 @@ class Adventure(RoadTripHandler):
 				self.redirect('/')
 			else:
 				steps = journey.get_steps()
-				self.render('adventure.html', steps = steps, length = len(steps), name = journey.name, sugg_enabled = journey.enable_sugg or journey.owner.key().id() == self.user.key().id())
+				self.render('adventure.html', length = len(steps), steps = steps, journey = journey, sugg_enabled = journey.enable_sugg or journey.owner.key().id() == self.user.key().id())
 		else:
 			self.response.write("You fail bro")
 		
+class NewStep(RoadTripHandler):
+	def get(self):
+		journey = Journey.get_by_id(int(self.request.get('id')))
+		if journey and self.user:
+			error = True
+			for j in self.user.get_journeys():
+				if j.key().id() == journey.key().id():
+					error = False
+					break
+			if error:
+				self.redirect('/')
+			else:
+				journey.nbr_steps = journey.nbr_steps + 1
+				journey.put()
+				self.redirect('/adventure?id=' + self.request.get('id'))
+		else:
+			self.redirect('/')
 
 app = webapp2.WSGIApplication([('/', MainPage),
                               ('/travel', Travel),
@@ -304,6 +322,7 @@ app = webapp2.WSGIApplication([('/', MainPage),
                                ('/signup', Register),
                                ('/login', Login),
                                ('/logout', Logout),
-							   ('/adventure', Adventure)
+							   ('/adventure', Adventure),
+							   ('/new_step', NewStep)
                                ],
                               debug=True)

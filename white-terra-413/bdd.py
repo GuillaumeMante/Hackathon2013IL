@@ -94,14 +94,14 @@ class Journey(db.Model):
 	
 	def delete(self):
 		for i in self.guestList:
-			delete(i)
+			db.delete(i)
 		for u in self.participants:
-			delete(u)
+			db.delete(u)
 		for s in suggestions:
 			s.delete()
 		for m in self.messages:
-			delete(m)
-		delete(self)
+			db.delete(m)
+		db.delete(self)
 
 class Suggestion(db.Model):
 	journey = db.ReferenceProperty(Journey, required = True, collection_name="suggestions")
@@ -116,8 +116,8 @@ class Suggestion(db.Model):
 		
 	def delete(self):
 		for v in self.votes:
-			delete(v)
-		delete(self)
+			db.delete(v)
+		db.delete(self)
 		
 	def vote(self, user):
 		suggestions = self.journey.suggestions
@@ -127,7 +127,7 @@ class Suggestion(db.Model):
 		for s in suggestions:
 			for v in s.votes:
 				if v.user == user:
-					delete(v)
+					db.delete(v)
 		vote = Vote(user = user, suggestion = self)
 		vote.put()
 

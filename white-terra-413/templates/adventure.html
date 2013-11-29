@@ -2,9 +2,9 @@
 
 {% block content %}
    <div style="width:600px; margin-right:auto; margin-left:auto;">
-		<h3>{{name}}</h3>
-		{% for i in range(0,length) %}
-		<div><h4>step {{i}}</h4>
+		<h3>{{journey.name}}</h3>
+		{% for i in range(0,length - 1) %}
+		<div><h4>step {{i + 1}}</h4>
 			<h5>places</h5>
 			<p>{% for s in steps[i]['place'] %}
 				{{s.id}}
@@ -32,7 +32,7 @@
 		</div>
 		{% endfor %}
 		{% if sugg_enabled %}
-		<input type="button" value="new step" onclick="self.location.href='/new?id={{i.key().id()}}'"/>
+		<input type="button" value="new step" onclick="self.location.href='/new_step?id={{journey.key().id()}}'"/>
 		{% endif %}
     </div>
 {% endblock %}

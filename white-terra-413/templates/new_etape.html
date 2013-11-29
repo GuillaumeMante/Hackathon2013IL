@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+<table style="width:100%;margin:auto; display:inline-block;float:center;"> <TR>
+	<TD valign="top" style="width:50%">
+    <form method="post" style="width:450px;  margin:auto; margin-left:1%; margin-top:50px;float: right;">
+	<h3>New Step</h3>
+       <table>
+        <tr>
+          <td>
+            <div class="address-line"><label>Address: </label> </td>
+			 <td><input id="address"  name="destination" type="text" style="width:350px; " /></div>
+			 </td>
+			 
+           
+          
+        </tr>
+       </table>
+	    <div id="map_canvas" style="width:435px; height:435px; margin-top:20px;"></div><br/>
+    </form>
+    </TD>
+	<TD valign="top"style="width:50%;">
+   <div class="box" style="display:inline-block;margin-top:50px;float: left;">
+        <br>
+
+        
+       <h3>Total Results : {{totalresults}}</h3>
+             <br>
+        {{erreur}}
+        <form method="post" action="/adventure?id={{journey.key().id()}}">
+
+           <table>
+        {% for i in tabblockannonce %}
+               <tr>
+                 <td>
+                     <p>
+						 <label for="{{i['pid']}}">
+						 <input type="radio" name="accommodation" id="{{i['pid']}}" value="{{i['pid']}}" />
+						 Occupancy : {{i["occupancy"]}} , MinimumStayNight : {{i["minimumStayNight"]}}, Price :{{i["price"]}}
+						 </label>
+                     </p>
+                     <br>
+                 </td>
+                </tr>
+        {% endfor %}
+         </table>
+		 <input type="hidden" value="{{step}}" name="step" />
+		 <input type="submit" value="Choose" />
+        </form>
+    </div></TD> </TR> 
+</table>
+{% endblock %}

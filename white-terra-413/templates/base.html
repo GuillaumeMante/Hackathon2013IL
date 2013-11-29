@@ -1,37 +1,49 @@
 <!DOCTYPE html>
 <html>
+ 
+ 
+  
 <head>
-  <link type="text/css" rel="stylesheet" href="/static/main.css" />
+  <link type="text/css" href="/static/main.css" rel="stylesheet" />
+  <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+  <script type="text/javascript" src="/static/jquery-1.4.2.min.js"></script>
+  <script type="text/javascript" src="/static/jquery-ui-1.8.1.custom.min.js"></script>
+  <script type="text/javascript" src="/static/main.js"></script>
+
   <link rel="shortcut icon" href="favicon.ico"/>
 
   <title>An Expected Journey</title>
 </head>
 
-<body>
-  <a class="main-title">
+<body> <p align="center"><<div class="main-title">
 
-     <IMG SRC="http://i.imgur.com/wiQawAJ.png"
+     <IMG SRC="/static/images/ring.png"
  WIDTH=60
- HEIGHT=60> An Expected Journey <IMG SRC="http://kit-sticker.com/images/14039-frodo-baggins-lord-of-the-rings-s.png"
+ HEIGHT=60> An Expected Journey <IMG SRC="/static/images/frodo.png"
  WIDTH=60
- HEIGHT=60>
+ HEIGHT=60 />
 
-  </a>
-	
-  <div class="login-area">
-    {% if user %}
-      {{user.name}} (<a class="login-link" href="/logout">Logout</a>)
+  </div></p>
+ <div class="login-area">
+   {% if user %} {{user.name}} (<a class="login-link" href="/logout">Logout</a>)
     {% else %}
       <a class="login-link" href="/login">Login</a>
       |
       <a class="login-link" href="/signup">Signup</a>
-    {% endif %}
+    {% endif %}  
   </div>
   
-  <div id="content">
+   <div class="homepage">  
+	<a class="hompage" href="/">Homepage</a>
+  </div>
+  
+ 
+    <div id="content" >
   {% block content %}
   {% endblock %}
   </div>
+
+
 </body>
 
 </html>

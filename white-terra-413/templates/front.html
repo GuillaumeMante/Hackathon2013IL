@@ -1,11 +1,34 @@
 {% extends "base.html" %}
 
 {% block content %}
+ <p align="center"> <a href='new_adventure' class="BigButton">Begin a Journey</a>
 
-  {% for p in posts %}
-    {{ p.render() | safe }}
-    <br><br>
-  {% endfor %}
   <br>
-  <div class="queried"> {{querysecond}}</div> 
+  
+   {% if user %}
+   <div class="front-panel">
+   <h6>Welcome, {{user.name}}!</h6>
+		<h3>Your Journeys</h3>
+		<p><ul>{% for j in journeys %}
+			
+		<li><a href="/adventure?id={{j.key().id()}}">{{j.name}}</a><br /></li>
+
+			{% endfor %}
+		</ul></p>
+		<h3>Invitations received</h3>
+		<div><ul>{% for i in invitations %}
+			<li><p><h6>{{i.journey.name}}</h6>
+			{{i.journey.owner.name}} invited you in his journey from {{i.journey.start}} to {{i.journey.end}} (~ {{i.journey.budget}}€).<br />
+			{% if i.message %}
+			description :<br />
+			{{i.message}}
+			{% endif %}</p>
+			<input type="button" value="accept" onclick="self.location.href='/accept?id={{i.key().id()}}'" />
+			<input type="button" value="decline" onclick="self.location.href='/decline?id={{i.key().id()}}'" />
+			</li>{% endfor %}
+		</ul></div>
+	</div>
+</p>
+   {% endif %}  
+  </p>
 {% endblock %}

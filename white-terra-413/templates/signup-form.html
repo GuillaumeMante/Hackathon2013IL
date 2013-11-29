@@ -1,5 +1,7 @@
 <!DOCTYPE html>
+{% extends "base.html" %}
 
+{% block content %}
 <html>
   <head>
     <title>Sign Up</title>
@@ -11,15 +13,17 @@
   </head>
 
   <body>
-    <h2>Signup</h2>
+
+<div style="width:600px; margin-right:auto; margin-left:auto;margin-top:50px;">
     <form method="post">
+	<h3>Signup</h3>
       <table>
         <tr>
           <td class="label">
             Username
           </td>
           <td>
-            <input type="text" name="username" value="{{username}}">
+            <input type="text" name="username" value="{{username}}" class="sign-input">
           </td>
           <td class="error">
             {{error_username}}
@@ -31,7 +35,7 @@
             Password
           </td>
           <td>
-            <input type="password" name="password" value="">
+            <input type="password" name="password" value="" class="pass-input">
           </td>
           <td class="error">
             {{error_password}}
@@ -43,7 +47,7 @@
             Verify Password
           </td>
           <td>
-            <input type="password" name="verify" value="">
+            <input type="password" name="verify" value="" class="pass-input">
           </td>
           <td class="error">
             {{error_verify}}
@@ -55,16 +59,17 @@
             Email (optional)
           </td>
           <td>
-            <input type="text" name="email" value="{{email}}">
+            <input type="text" name="email" value="{{email}}" class="sign-input">
           </td>
           <td class="error">
             {{error_email}}
           </td>
         </tr>
       </table>
-
-      <input type="submit">
+	<p align="right"><input type="submit"  value="Validate"></p>
     </form>
+</div>
   </body>
 
 </html>
+  {% endblock %}

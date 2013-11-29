@@ -1,5 +1,7 @@
 <!DOCTYPE html>
+{% extends "base.html" %}
 
+{% block content %}
 <html>
   <head>
     <title>Login</title>
@@ -11,15 +13,16 @@
   </head>
 
   <body>
-    <h2>Login</h2>
+<div style="width:600px; margin-right:auto; margin-left:auto;margin-top:50px;">
     <form method="post">
+	    <h3>Login</h3>
       <table>
         <tr>
           <td class="label">
             Username
           </td>
           <td>
-            <input type="text" name="username" value="{{username}}">
+            <input type="text" name="username" value="{{username}}" class="sign-input">
           </td>
         </tr>
 
@@ -28,7 +31,7 @@
             Password
           </td>
           <td>
-            <input type="password" name="password" value="">
+            <input type="password" name="password" value="" class="pass-input">
           </td>
         </tr>
       </table>
@@ -37,8 +40,10 @@
         {{error}}
       </div>
 
-      <input type="submit">
+      <p align="right"><input type="submit"  value="Validate"></p>
     </form>
+	</div>
   </body>
 
 </html>
+  {% endblock %}

@@ -3,17 +3,26 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>New adventure</h1>
-    <br>
-    <div>
+   <div style="width:600px; margin-right:auto; margin-left:auto;margin-top:50px;">
      <form method="post">
+	 	<h3>New Adventure</h3>
        <table>
-        <tr>
+	    <tr>
           <td class="label">
-            Date de début
+            Trip name 
           </td>
           <td>
-            <input type="text" name="date_debut" value="">
+            <input type="text" name="name" value="" class="new-input">
+          </td>
+          <td class="error">
+          </td>
+        </tr>
+        <tr>
+          <td class="label">
+            Begin date
+          </td>
+          <td>
+            <input type="text" name="date_debut" value="" class="new-input">
           </td>
           <td class="error">
             {{error_date_debut}}
@@ -22,10 +31,10 @@
 
         <tr>
           <td class="label">
-            Date de fin
+            End date
           </td>
           <td>
-            <input type="text" name="date_fin" value="">
+            <input type="text" name="date_fin" value="" class="new-input">
           </td>
           <td class="error">
             {{error_date_fin}}
@@ -34,10 +43,10 @@
 
         <tr>
           <td class="label">
-            Budget maximum par personne
+            Max budget per person
           </td>
           <td>
-            <input type="text" name="budget" value="">
+            <input type="text" name="budget" value="" class="new-input">
           </td>
           <td class="error">
             {{error_budget}}
@@ -45,7 +54,7 @@
         </tr>
 
        </table>
-      <input type="submit" value="Continuer">
+      <p align="right"><input type="submit"  value="Validate"></p>
       </form>
 
     </div>

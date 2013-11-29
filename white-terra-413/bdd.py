@@ -1,7 +1,11 @@
 from string import letters
+import random
 import hashlib
 from google.appengine.ext import webapp
 from google.appengine.ext import db
+import urllib
+import urllib2
+import json
 
 def make_salt(length = 5):
     return ''.join(random.choice(letters) for x in xrange(length))
@@ -48,41 +52,69 @@ class User(db.Model):
 	def get_invitations(self):
 		invitations = []
 		for inv in self.invitations:
-			invitations.append(inv.user, inv.message)
+			if i.state == 1:
+				invitations.append(inv.user, inv.message)
 		return invitations
+		
+	def get_journeys(self):
+		journeys = []
+		for i in self.journeys:
+			journeys.append(i.journey)
+		return journeys
+		
+	def get_friends(self):
+		friends = []
+		for f in self.friends1:
+			friends.append(f.user2)
+		for f in self.friends2:
+			friends.append(f.user1)
+		return friends;
+		
+	def add_friend(self, user):
+		if user in self.get_friends():
+			return
+		else:
+			friend = Friend(self, user)
+			friend.put()
 
 class Journey(db.Model):
 	owner = db.ReferenceProperty(User, required = True)
 	name = db.StringProperty(required = True)
-	start = db.DateTimeProperty()
-	end = db.DateTimeProperty()
-	
-	def getSteps(self):
+	start = db.StringProperty()
+	end = db.StringProperty()
+	budget = db.IntegerProperty()
+	enable_sugg = db.BooleanProperty()
+	nbr_steps = db.IntegerProperty()
+
+	def get_steps(self):
 		suggs = self.suggestions
 		steps = [];
+		while len(steps) < self.nbr_steps:
+				steps.append({'accommodation':[],'food':[]})
 		for suggestion in suggs:
-			while len(steps) < suggestion.step - 1:
-				steps.append([])
-			steps[suggestion.step-1].append(Suggestion)
+			url1 = "http://api.outpost.travel/placeRentals/" + suggestion.id
+			response1 = urllib2.urlopen(url1)
+			data1 = json.load(response1)
+			steps[suggestion.step-1][suggestion.type].append([suggestion, data1])
 		return steps;
 	
 	def delete(self):
 		for i in self.guestList:
-			delete(i)
+			db.delete(i)
 		for u in self.participants:
-			delete(u)
+			db.delete(u)
 		for s in suggestions:
 			s.delete()
 		for m in self.messages:
-			delete(m)
-		delete(self)
+			db.delete(m)
+		db.delete(self)
 
 class Suggestion(db.Model):
 	journey = db.ReferenceProperty(Journey, required = True, collection_name="suggestions")
 	step = db.IntegerProperty(required = True)
-	type = db.StringProperty(required=True, choices=set(["place", "accommodation", "food"]))
+	type = db.StringProperty(required=True, choices=set(["accommodation", "food"]))
 	id = db.StringProperty(required = True)
-	def getVotes(self):
+	def get_votants(self):
 		votes = []
 		for v in self.votes:
 			votes.append(v.user)
@@ -90,8 +122,20 @@ class Suggestion(db.Model):
 		
 	def delete(self):
 		for v in self.votes:
-			delete(v)
-		delete(self)
+			db.delete(v)
+		db.delete(self)
+		
+	def vote(self, user):
+		suggestions = []
+		for s in self.journey.suggestions:
+			if s.step == self.step and s.type == self.type:
+				suggestions.append(s)
+		for s in suggestions:
+			for v in s.votes:
+				if v.user.key().id() == user.key().id():
+					db.delete(v)
+		vote = Vote(user = user, suggestion = self)
+		vote.put()
 
 class Vote(db.Model):
 	user = db.ReferenceProperty(User, required = True, collection_name="user_votes")
@@ -111,3 +155,8 @@ class Message(db.Model):
 	author = db.ReferenceProperty(User, required = True)
 	journey = db.ReferenceProperty(Journey, required = True, collection_name="messages")
 	message = message = db.StringProperty(multiline=True)
+	created = db.DateTimeProperty(auto_now_add = True)
+	
+class Friend(db.Model):
+	user1 = db.ReferenceProperty(User, required = True, collection_name="friends1")
+	user2 = db.ReferenceProperty(User, required = True, collection_name="friends2")

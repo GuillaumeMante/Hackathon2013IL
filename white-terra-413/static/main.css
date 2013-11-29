@@ -60,8 +60,11 @@ display: inline-block;
 	border:2px solid gray;
 	padding: 0.5em;
 	width:400px;
+	height:540px;
+	overflow:auto;
 	margin-bottom:20px;
 	margin-right:10px;
+	
 }
 
 h5{
@@ -122,6 +125,7 @@ input[type=submit] {
     font-weight: 500;
     padding: 0.1em;
     border-radius: 25px;
+	margin:0 auto;
     color: #222;
     font-size: 70px;
     font-weight: bold;

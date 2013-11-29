@@ -1,7 +1,6 @@
 body {
     font-family: Times New Roman, serif;
-    font-size: 14px;
-    
+    font-size: 14px;    
     margin: 0 auto;
 	padding: 0;
 	height: 100%;
@@ -61,6 +60,14 @@ h6{
 	margin-top: 0px;
 	text-align:center;
 	
+}
+
+h7{
+	text-decoration : underline;
+}
+
+h8{
+	font-weight :normal;
 }
 
 .step{

@@ -9,13 +9,15 @@
    <div class="front-panel">
    <h4>Welcome, {{user.name}}!</h4>
 		<h3>Your Journeys</h3>
-		<p>{% for j in journeys %}
-			<a href="/journeys?id={{j.key().id()}}">{{j.name}}</a><br />
+		<p><ul>{% for j in journeys %}
+			
+		<li><a href="/adventure?id={{j.key().id()}}">{{j.name}}</a><br /></li>
+
 			{% endfor %}
-		</p>
+		</ul></p>
 		<h3>Invitations received</h3>
-		<div>{% for i in invitations %}
-			<p><h6>{{i.journey.name}}</h6>
+		<div><ul>{% for i in invitations %}
+			<li><p><h6>{{i.journey.name}}</h6>
 			{{i.journey.owner.name}} invited you in his journey from {{i.journey.start}} to {{i.journey.end}} (~ {{i.journey.budget}}€).<br />
 			{% if i.message %}
 			description :<br />
@@ -23,8 +25,10 @@
 			{% endif %}</p>
 			<input type="button" value="accept" onclick="self.location.href='/accept?id={{i.key().id()}}'" />
 			<input type="button" value="decline" onclick="self.location.href='/decline?id={{i.key().id()}}'" />
-			{% endfor %}
-		</div>
+			</li>{% endfor %}
+		</ul></div>
 	</div>
+</p>
    {% endif %}  
+  </p>
 {% endblock %}

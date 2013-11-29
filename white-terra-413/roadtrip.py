@@ -102,15 +102,11 @@ class RoadTripHandler(webapp2.RequestHandler):
 class MainPage(RoadTripHandler):
 
     def get(self):
-	    self.render('front.html')
-
-class Welcome(RoadTripHandler):
-	def get(self):
 		if self.user:
-			self.render('welcome.html', username = self.user.name, journeys = self.user.get_journeys(), invitations = self.user.get_invitations())
+			self.render('front.html', user = self.user, journeys = self.user.get_journeys(), invitations = self.user.get_invitations())
 		else:
-			self.redirect('/login')
-
+			self.render('front.html', user = None, journeys = None, invitations = None)
+			
 DATE_RE = re.compile(r'(\d+/\d+/\d+)')
 def valid_date(date):
     return date and DATE_RE.match(date)
@@ -137,21 +133,21 @@ class New_adventure(RoadTripHandler):
             if not self.name:
                 self.name = "journey from " + self.date_debut + " to " + self.date_fin
             if not valid_date(self.date_debut):
-                params['error_date_debut'] = "Ceci n'est pas une date valide."
+                params['error_date_debut'] = "Date not valid."
                 have_error = True
 
             if not valid_date(self.date_fin):
-                params['error_date_fin'] = "Ceci n'est pas une date valide."
+                params['error_date_fin'] = "Date not valid."
                 have_error = True
 
             if not valid_budget(self.budget):
-                params['error_budget'] = "Ceci n'est pas un budget valide."
+                params['error_budget'] ="Budget not valid."
                 have_error = True
 
             if have_error:
                 self.render('new_adventure.html', **params)
             else:
-                journey = Journey(owner = self.user, name = self.name, start = self.date_debut, end = self.date_fin, budget = int(self.budget))
+                journey = Journey(owner = self.user, name = self.name, start = self.date_debut, end = self.date_fin, budget = int(self.budget), nbr_steps = 1, enable_sugg = False)
                 journey.put()
                 participant = Participant(journey = journey, user = self.user)
                 participant.put()
@@ -290,16 +286,49 @@ class Logout(RoadTripHandler):
 
 class Adventure(RoadTripHandler):
 	def get(self):
-		journey = self.response
+		journey = Journey.get_by_id(int(self.request.get('id')))
+		
+		if journey and self.user:
+			error = True
+			for j in self.user.get_journeys():
+				if j.key().id() == journey.key().id():
+					error = False
+					break
+			if error:
+				self.redirect('/')
+			else:
+				steps = journey.get_steps()
+				self.render('adventure.html', length = len(steps), steps = steps, journey = journey, sugg_enabled = journey.enable_sugg or journey.owner.key().id() == self.user.key().id())
+		else:
+			self.redirect('/')
+		
+class NewStep(RoadTripHandler):
+	def get(self):
+		journey = Journey.get_by_id(int(self.request.get('id')))
+		if journey and self.user:
+			error = True
+			for j in self.user.get_journeys():
+				if j.key().id() == journey.key().id():
+					error = False
+					break
+			if error:
+				self.redirect('/')
+			else:
+				journey.nbr_steps = journey.nbr_steps + 1
+				journey.put()
+				self.redirect('/adventure?id=' + self.request.get('id'))
+		else:
+			self.redirect('/')
 
 app = webapp2.WSGIApplication([('/', MainPage),
                               ('/travel', Travel),
                                ('/new_friends', New_friends),
                                ('/new_etape', New_etape),
                               ('/new_adventure', New_adventure),
-                              ('/welcome', Welcome),
                                ('/signup', Register),
                                ('/login', Login),
                                ('/logout', Logout),
+							   ('/adventure', Adventure),
+							   ('/new_step', NewStep)
                                ],
                               debug=True)

@@ -19,9 +19,6 @@ def valid_pw(name, password, h):
 	
 def users_key(group = 'default'):
     return db.Key.from_path('users', group)
-	
-def journeys_key(group = 'default'):
-    return db.Key.from_path('journeys', group)
 
 class User(db.Model):
 	name = db.StringProperty(required = True)
@@ -83,30 +80,28 @@ class Journey(db.Model):
 	start = db.StringProperty()
 	end = db.StringProperty()
 	budget = db.IntegerProperty()
-	
-	@classmethod
-	def by_id(cls, uid):
-		return Journey.get_by_id(uid, parent = journeys_key())
+	enable_sugg = db.BooleanProperty()
+	nbr_steps = db.IntegerProperty()
 
 	def get_steps(self):
 		suggs = self.suggestions
 		steps = [];
+		while len(steps) < self.nbr_steps:
+				steps.append({'place':[],'accomodation':[],'food':[]})
 		for suggestion in suggs:
-			while len(steps) < suggestion.step - 1:
-				steps.append([])
-			steps[suggestion.step-1].append(Suggestion)
+			steps[suggestion.step-1][suggestion.type].append(suggestion)
 		return steps;
 	
 	def delete(self):
 		for i in self.guestList:
-			delete(i)
+			db.delete(i)
 		for u in self.participants:
-			delete(u)
+			db.delete(u)
 		for s in suggestions:
 			s.delete()
 		for m in self.messages:
-			delete(m)
-		delete(self)
+			db.delete(m)
+		db.delete(self)
 
 class Suggestion(db.Model):
 	journey = db.ReferenceProperty(Journey, required = True, collection_name="suggestions")
@@ -121,8 +116,8 @@ class Suggestion(db.Model):
 		
 	def delete(self):
 		for v in self.votes:
-			delete(v)
-		delete(self)
+			db.delete(v)
+		db.delete(self)
 		
 	def vote(self, user):
 		suggestions = self.journey.suggestions
@@ -132,7 +127,7 @@ class Suggestion(db.Model):
 		for s in suggestions:
 			for v in s.votes:
 				if v.user == user:
-					delete(v)
+					db.delete(v)
 		vote = Vote(user = user, suggestion = self)
 		vote.put()
 

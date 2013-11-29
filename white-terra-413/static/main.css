@@ -36,8 +36,8 @@ h2 {
 h3{
     font-size: 40px;
     font-weight: bold;
-    margin-bottom: 40px;
-	margin-top: 0px;
+    margin-bottom: 20px;
+	margin-top: 20px;
 	text-align:center;
 	width:100%;
     display: inline-block;
@@ -46,13 +46,43 @@ h3{
     border-radius: 25px;
 }
 
-h4{
-    font-size: 50px;
+h6{
+    font-size: 40px;
     font-weight: bold;
     margin-bottom: 40px;
 	margin-top: 0px;
-	text-align:center;}
+	text-align:center;
+	
+}
 
+.step{
+display: inline-block;
+	border:2px solid gray;
+	padding: 0.5em;
+	width:400px;
+	margin-bottom:20px;
+	margin-right:10px;
+}
+
+h5{
+	display: inline-block;
+	border:1px solid gray;
+	font-size: 30px;
+    font-weight: bold;
+	margin-bottom: 0px;
+	margin-top: 0px;
+	padding: 0.2em;
+}
+
+li {
+ font-family: Arial, sans-serif;
+ font-size: 100%;
+ color: black;
+ display : list-item;
+ list-style-image : url('images/puce.png');
+ line-height: 145%
+} 
+	
 .error {
     color: red;
 }
@@ -175,7 +205,7 @@ input[type=submit] {
 	text-align:center;
 	text-shadow:-2px -2px 0px #0c1201;
     margin : auto;
-	margin-top: 10%;
+	margin-top: 50px;
 }
 .BigButton:hover {
 	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #3c7832), color-stop(1, #1e5329) );
@@ -209,9 +239,21 @@ form{
     border-radius: 25px;
 	padding:1em;
     text-decoration: none;
-	margin-top: 200px;
+	margin-top: 75px;
 	margin-left:30px;
 	margin-right:30px;
+}
+
+.box{
+	font-size: 24px;
+    background-color: rgba(255, 255, 255, 0.75);
+    border-radius: 25px;
+	padding:1em;
+    text-decoration: none;
+	margin-top: 75px;
+	margin-left:30px;
+	margin-right:30px;
+	text-margin:20pyx;
 }
 
 input[type="text"]{
@@ -276,3 +318,59 @@ input[type="submit"]:active {
 	top:1px;
 }
 
+input[type="button"]{
+-moz-box-shadow:inset 0px 1px 3px 0px #3c783c;
+	-webkit-box-shadow:inset 0px 1px 3px 0px #3c783c;
+	box-shadow:inset 0px 1px 3px 0px #3c783c;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #1e5329), color-stop(1, #3c7832) );
+	background:-moz-linear-gradient( center top, #1e5329 5%, #3c7832 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#1e5329', endColorstr='#3c7832');
+	background-color:#1e5329;
+	-webkit-border-top-left-radius:10px;
+	-moz-border-radius-topleft:10px;
+	border-top-left-radius:10px;
+	-webkit-border-top-right-radius:10px;
+	-moz-border-radius-topright:10px;
+	border-top-right-radius:10px;
+	-webkit-border-bottom-right-radius:10px;
+	-moz-border-radius-bottomright:10px;
+	border-bottom-right-radius:10px;
+	-webkit-border-bottom-left-radius:10px;
+	-moz-border-radius-bottomleft:10px;
+	border-bottom-left-radius:10px;
+	text-indent:0;
+	border:2px solid white;
+	display:inline-block;
+	color:#ffffff;
+	font-family:Times New Roman;
+	font-weight:bold;
+	font-style:normal;
+	padding:0.3em;
+	line-height:35px;
+	font-size:30px;
+	text-decoration:none;
+	text-align:center;
+	text-shadow:-2px -2px 0px #0c1201;
+    margin : auto;
+}
+input[type="button"]:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #3c7832), color-stop(1, #1e5329) );
+	background:-moz-linear-gradient( center top, #3c7832 5%, #1e5329 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#3c7832', endColorstr='#1e5329');
+	background-color:#3c7832;
+}
+input[type="button"]:active {
+	position:relative;
+	top:1px;
+}
+
+input[value="New step"]{
+	font-size:50px;
+}
+input[value="Add suggestion"]{
+	font-size:20px;
+}
+
+input[value="Vote"]{
+	font-size:15px;
+}

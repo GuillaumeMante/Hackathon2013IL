@@ -398,10 +398,10 @@ input[value="Add suggestion"]{
 }
 
 input[value="Vote"]{
-	font-size:15px;
+	font-size:20px;
 }
 input[value="Hide"]{
-	font-size:15px;
+	font-size:20px;
 }
 input[value="ok"]{
 	font-size:30px;

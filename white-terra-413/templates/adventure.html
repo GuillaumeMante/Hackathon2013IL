@@ -27,12 +27,17 @@
 				<div id="{{i}}|{{s[0].id}}" style="display:none;visibility:hidden">
 					<input type="button" value="Vote" onclick="self.location.href='/vote?id={{s[0].key().id()}}'"/>
 					<input type="button" value="Hide" onclick="javascript:hide('{{i}}|{{s[0].id}}')" />
+					  <a href={{s[3]}}>View announce</a><br />
 					<p> Voters : <br />
+
 					{% for u in s[0].get_votants() %}
 					{{u.name}} <br />
 					{% endfor %}</p>
 					
-					<div style="text-align:justify;">{{s[2]}}</div>
+					
+				
+
+					
 				</div>
 				</div>
 			{% endfor %}

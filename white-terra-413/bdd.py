@@ -95,7 +95,8 @@ class Journey(db.Model):
 			url1 = "http://api.outpost.travel/placeRentals?pid=" + suggestion.id
 			response1 = urllib2.urlopen(url1)
 			data1 = json.load(response1)
-			steps[suggestion.step-1][suggestion.type].append([suggestion,json.dumps(data1['items'][0]['heading']), json.dumps(data1['items'][0]['description']), json.dumps(data1['items'][0]['link'])])
+			url = json.dumps(data1['items'][0]['link'])
+			steps[suggestion.step-1][suggestion.type].append([suggestion,json.dumps(data1['items'][0]['heading']), json.dumps(data1['items'][0]['description']), url[1:len(url)-1]])
 		return steps;
 	
 	def delete(self):

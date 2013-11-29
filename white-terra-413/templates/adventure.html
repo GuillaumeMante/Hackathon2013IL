@@ -26,12 +26,13 @@
 					{% for u in s.get_votants() %}
 					{{u.name}} <br />
 					{% endfor %}</p>
-					<input type="button" value="vote" /><input type="button" value="hide" onclick="javascript:hide('{{i}}|{{s.id}}')" />
+					<input type="button" value="vote" onclick="self.location.href='/vote?id={{s.key().id()}}'"/>
+					<input type="button" value="hide" onclick="javascript:hide('{{i}}|{{s.id}}')" />
 				</div>
 			{% endfor %}
 			</div>
 			{% if sugg_enabled %}
-			<p align="right"><input type="button" value="Add suggestion" /></p>
+			<p align="right"><input type="button" value="Add suggestion" onclick="self.location.href='/new_etape?id={{journey.key().id()}}&amp;step={{i + 1}}'"/></p>
 			{% endif %}
 			
 			<h5>Accommodations</h5>
@@ -42,7 +43,8 @@
 					{% for u in s.get_votants() %}
 					{{u.name}} <br />
 					{% endfor %}</p>
-					<input type="button" value="vote" /><input type="button" value="hide" onclick="javascript:hide('{{i}}|{{s.id}}')" />
+					<input type="button" value="vote" onclick="self.location.href='/vote?id={{s.key().id()}}'"/>
+					<input type="button" value="hide" onclick="javascript:hide('{{i}}|{{s.id}}')" />
 				</div>
 			{% endfor %}
 			</div>
@@ -58,7 +60,8 @@
 							{% for u in s.get_votants() %}
 							{{u.name}} <br />
 							{% endfor %}</p>
-					<input type="button" value="vote" /><input type="button" value="hide" onclick="javascript:hide('{{i}}|{{s.id}}')" />
+					<input type="button" value="vote" onclick="self.location.href='/vote?id={{s.key().id()}}'"/>
+					<input type="button" value="hide" onclick="javascript:hide('{{i}}|{{s.id}}')" />
 				</div>
 			{% endfor %}
 			</div>

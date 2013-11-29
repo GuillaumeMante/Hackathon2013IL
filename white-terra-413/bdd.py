@@ -121,12 +121,12 @@ class Suggestion(db.Model):
 		
 	def vote(self, user):
 		suggestions = self.journey.suggestions
-		for s in suggestion:
+		for s in suggestions:
 			if s.step != self.step or s.type != self.type:
-				suggestion.remove(s)
+				suggestions.remove(s)
 		for s in suggestions:
 			for v in s.votes:
-				if v.user == user:
+				if v.user.key().id() == user.key().id():
 					db.delete(v)
 		vote = Vote(user = user, suggestion = self)
 		vote.put()

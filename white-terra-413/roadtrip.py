@@ -365,6 +365,24 @@ class NewStep(RoadTripHandler):
 		else:
 			self.redirect('/')
 
+class Vote(RoadTripHandler):
+	def get(self):
+		s = Suggestion.get_by_id(int(self.request.get('id')))
+		journey = s.journey
+		if journey and self.user:
+			error = True
+			for j in self.user.get_journeys():
+				if j.key().id() == journey.key().id():
+					error = False
+					break
+			if error:
+				self.redirect('/')
+			else:
+				s.vote(self.user)
+				self.redirect('/adventure?id=' + str(journey.key().id()))
+		else:
+			self.redirect('/')
+
 app = webapp2.WSGIApplication([('/', MainPage),
                               ('/travel', Travel),
                                ('/new_friends', New_friends),
@@ -374,6 +392,7 @@ app = webapp2.WSGIApplication([('/', MainPage),
                                ('/login', Login),
                                ('/logout', Logout),
 							   ('/adventure', Adventure),
-							   ('/new_step', NewStep)
+							   ('/new_step', NewStep),
+							   ('/vote', Vote)
                                ],
                               debug=True)

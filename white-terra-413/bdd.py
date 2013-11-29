@@ -87,7 +87,7 @@ class Journey(db.Model):
 		suggs = self.suggestions
 		steps = [];
 		while len(steps) < self.nbr_steps:
-				steps.append({'place':[],'accomodation':[],'food':[]})
+				steps.append({'accomodation':[],'food':[]})
 		for suggestion in suggs:
 			steps[suggestion.step-1][suggestion.type].append(suggestion)
 		return steps;
@@ -106,7 +106,7 @@ class Journey(db.Model):
 class Suggestion(db.Model):
 	journey = db.ReferenceProperty(Journey, required = True, collection_name="suggestions")
 	step = db.IntegerProperty(required = True)
-	type = db.StringProperty(required=True, choices=set(["place", "accommodation", "food"]))
+	type = db.StringProperty(required=True, choices=set(["accommodation", "food"]))
 	id = db.StringProperty(required = True)
 	def get_votants(self):
 		votes = []
@@ -120,10 +120,10 @@ class Suggestion(db.Model):
 		db.delete(self)
 		
 	def vote(self, user):
-		suggestions = self.journey.suggestions
-		for s in suggestions:
-			if s.step != self.step or s.type != self.type:
-				suggestions.remove(s)
+		suggestions = []
+		for s in self.journey.suggestions:
+			if s.step == self.step and s.type == self.type:
+				suggestions.append(s)
 		for s in suggestions:
 			for v in s.votes:
 				if v.user.key().id() == user.key().id():

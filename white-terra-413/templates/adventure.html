@@ -18,8 +18,9 @@
 		<h3>{{journey.name}}</h3>
 		{% for i in range(0,length) %}
 		<div class="step"><h6>Step {{i + 1}}</h6>
-			<h5>Places</h5>
-			<div>{% for s in steps[i]['place'] %}
+			<h5>Accommodations</h5>
+			<div>{% for s in steps[i]['accommodation'] %}
+				<div>
 				<a onclick="javascript:show('{{i}}|{{s.id}}')">{{s.id}}</a>
 				<div id="{{i}}|{{s.id}}" style="display:none;visibility:hidden">
 					<p> votants : <br />
@@ -29,22 +30,6 @@
 					<input type="button" value="vote" onclick="self.location.href='/vote?id={{s.key().id()}}'"/>
 					<input type="button" value="hide" onclick="javascript:hide('{{i}}|{{s.id}}')" />
 				</div>
-			{% endfor %}
-			</div>
-			{% if sugg_enabled %}
-			<p align="right"><input type="button" value="Add suggestion" onclick="self.location.href='/new_etape?id={{journey.key().id()}}&amp;step={{i + 1}}'"/></p>
-			{% endif %}
-			
-			<h5>Accommodations</h5>
-			<div>{% for s in steps[i]['accommodation'] %}
-				<a onclick="javascript:show('{{i}}|{{s.id}}')">{{s.id}}</a>
-				<div id="{{i}}|{{s.id}}" style="display:none;visibility:hidden">
-					<p> votants : <br />
-					{% for u in s.get_votants() %}
-					{{u.name}} <br />
-					{% endfor %}</p>
-					<input type="button" value="vote" onclick="self.location.href='/vote?id={{s.key().id()}}'"/>
-					<input type="button" value="hide" onclick="javascript:hide('{{i}}|{{s.id}}')" />
 				</div>
 			{% endfor %}
 			</div>
@@ -54,6 +39,7 @@
 			
 			<h5>Food</h5>
 			<div>{% for s in steps[i]['food'] %}
+			<div>
 				<a onclick="javascript:show('{{i}}|{{s.id}}')">{{s.id}}</a>
 				<div id="{{i}}|{{s.id}}" style="display:none;visibility:hidden">
 					<p> votants : <br />
@@ -63,6 +49,7 @@
 					<input type="button" value="vote" onclick="self.location.href='/vote?id={{s.key().id()}}'"/>
 					<input type="button" value="hide" onclick="javascript:hide('{{i}}|{{s.id}}')" />
 				</div>
+			</div>
 			{% endfor %}
 			</div>
 			{% if sugg_enabled %}

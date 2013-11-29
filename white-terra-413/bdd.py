@@ -80,14 +80,15 @@ class Journey(db.Model):
 	start = db.StringProperty()
 	end = db.StringProperty()
 	budget = db.IntegerProperty()
+	enable_sugg = db.BooleanProperty()
 
 	def get_steps(self):
 		suggs = self.suggestions
 		steps = [];
 		for suggestion in suggs:
 			while len(steps) < suggestion.step - 1:
-				steps.append([])
-			steps[suggestion.step-1].append(Suggestion)
+				steps.append({'place':[],'accomodation':[],'food':[]})
+			steps[suggestion.step-1][suggestion.type].append(suggestion)
 		return steps;
 	
 	def delete(self):

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+   <div style="width:600px; margin-right:auto; margin-left:auto;">
+		<h3>{{name}}</h3>
+		{% for i in range(0,length) %}
+		<div><h4>step {{i}}</h4>
+			<h5>places</h5>
+			<p>{% for s in steps[i]['place'] %}
+				{{s.id}}
+			{% endfor %}
+			{% if sugg_enabled %}
+			<input type="button" value="add suggestion" />
+			{% endif %}
+			</p>
+			<h5>accommodations</h5>
+			<p>{% for s in steps[i]['accommodation'] %}
+			{{s.id}}
+			{% endfor %}
+			{% if sugg_enabled %}
+			<input type="button" value="add suggestion" />
+			{% endif %}
+			</p>
+			<h5>food</h5>
+			<p>{% for s in steps[i]['food'] %}
+			{{s.id}}
+			{% endfor %}
+			{% if sugg_enabled %}
+			<input type="button" value="add suggestion" />
+			{% endif %}
+			</p>
+		</div>
+		{% endfor %}
+		{% if sugg_enabled %}
+		<input type="button" value="new step" />
+		{% endif %}
+    </div>
+{% endblock %}

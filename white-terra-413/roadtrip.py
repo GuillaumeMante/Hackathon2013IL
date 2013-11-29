@@ -102,14 +102,8 @@ class RoadTripHandler(webapp2.RequestHandler):
 class MainPage(RoadTripHandler):
 
     def get(self):
-	    self.render('front.html')
-
-class Welcome(RoadTripHandler):
-	def get(self):
 		if self.user:
-			self.render('welcome.html', username = self.user.name, journeys = self.user.get_journeys(), invitations = self.user.get_invitations())
-		else:
-			self.redirect('/login')
+			self.render('front.html', user = self.user, journeys = self.user.get_journeys(), invitations = self.user.get_invitations())
 
 DATE_RE = re.compile(r'(\d+/\d+/\d+)')
 def valid_date(date):
@@ -295,8 +289,8 @@ class Adventure(RoadTripHandler):
 			if error:
 				self.redirect('/')
 			else:
-				
-				self.response.write("OK")
+				steps = journey.get_steps()
+				self.render('adventure.html', steps = steps, length = len(steps), name = journey.name, sugg_enabled = journey.enable_sugg or journey.owner.key().id() == self.user.key().id())
 		else:
 			self.response.write("You fail bro")
 		
@@ -306,7 +300,6 @@ app = webapp2.WSGIApplication([('/', MainPage),
                                ('/new_friends', New_friends),
                                ('/new_etape', New_etape),
                               ('/new_adventure', New_adventure),
-                              ('/welcome', Welcome),
                                ('/signup', Register),
                                ('/login', Login),
                                ('/logout', Logout),

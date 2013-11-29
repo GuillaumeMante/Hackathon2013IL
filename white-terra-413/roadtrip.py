@@ -185,16 +185,61 @@ class New_etape(RoadTripHandler):
         destination = self.destination
         destination = destination.lower()
         destination = destination.title()
-        url = "http://api.outpost.travel/placeRentals?city="+destination
-        response = urllib2.urlopen(url)
-        data = json.load(response)
-        totalpage=json.dumps(data['totalPages'])
-        totalresults=json.dumps(data['totalResults'])
-        blockannonce = json.dumps(data['items'][0]['occupancy'])
-        for i in range(1,10):
-            blockannonce=blockannonce+"/<br>"+"minimumStayNight: "+json.dumps(data['items'][i]['minimumStayNight'])+", occupancy: "+json.dumps(data['items'][i]['occupancy'])
-        self.render('new_etape.html',username = self.user.name,totalpage=totalpage,blockannonce=blockannonce)
+        url1 = "http://api.outpost.travel/placeRentals?city="+destination
+        response1 = urllib2.urlopen(url1)
+        data1 = json.load(response1)
+        totalresults=json.dumps(data1['totalResults'])
+        totalpage=json.dumps(data1['totalPages'])
+        tabblockannonce=[]
+        test=0
+        erreur=""
+        if int(totalresults)==0:
+            erreur="No location availaible"
+        if int(totalpage)==1:
+            url2=url1+"&page=1"
+            response2 = urllib2.urlopen(url2)
+            data2 = json.load(response2)
+            nb_per_page=""
+            nb_per_page=json.dumps(data2['totalResults'])
+            test=nb_per_page
+            for i in range(0,int(nb_per_page)):
+                blockannonce={}
+                blockannonce["minimumStayNight"] = json.dumps(data2['items'][i]['minimumStayNight'])
+                blockannonce["occupancy"] = json.dumps(data2['items'][i]['occupancy'])
+                blockannonce["pid"] = json.dumps(data2['items'][i]['pid'])
+                tabblockannonce.append(blockannonce)
+        else:
 
+            for j in range(1,int(totalpage)):
+                url2=url1+"&page="+str(j)
+                response2 = urllib2.urlopen(url2)
+                data2 = json.load(response2)
+                nb_per_page=""
+                nb_per_page=json.dumps(data2['resultsPerPage'])
+                test=nb_per_page
+                for i in range(0,int(nb_per_page)):
+                    blockannonce={}
+                    blockannonce["minimumStayNight"] = json.dumps(data2['items'][i]['minimumStayNight'])
+                    blockannonce["occupancy"] = json.dumps(data2['items'][i]['occupancy'])
+                    blockannonce["pid"] = json.dumps(data2['items'][i]['pid'])
+                    tabblockannonce.append(blockannonce)
+
+            url3=url1+"&page="+totalpage
+            response3 = urllib2.urlopen(url3)
+            data3 = json.load(response3)
+            nb_per_page2=""
+            nb_per_page2=json.dumps(data3['resultsPerPage'])
+            nb_annonce_fin=0
+            nb_annonce_fin=int(totalresults)%int(nb_per_page2)
+            for k in range(0,nb_annonce_fin):
+                    blockannonce={}
+                    blockannonce["minimumStayNight"] = json.dumps(data3['items'][k]['minimumStayNight'])
+                    blockannonce["occupancy"] = json.dumps(data3['items'][k]['occupancy'])
+                    blockannonce["pid"] = json.dumps(data3['items'][k]['pid'])
+                    tabblockannonce.append(blockannonce)
+
+
+        self.render('new_etape.html',username = self.user.name,totalresults=totalresults,tabblockannonce=tabblockannonce,test=test,erreur=erreur);
 
 
 

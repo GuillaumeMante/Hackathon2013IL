@@ -14,7 +14,23 @@
     </form>
     </div>
     <div>
-        TOTAL PAGE : {{totalpage}}
-        OCCUPANCY : {{blockannonce}}
+        <br>
+         <form >
+       TOTAL RESULTS : {{totalresults}}
+             <br>
+        {{erreur}}
+          </form>
+        <form methode="post">
+           <table>
+        {% for i in tabblockannonce %}
+               <tr>
+                 <td>
+                     Occupancy : {{i["occupancy"]}}, MinimumStayNight : {{i["minimumStayNight"]}}, Pid :  {{i["pid"]}}
+                     <br>
+                 </td>
+                </tr>
+        {% endfor %}
+         </table>
+        </form>
     </div>
 {% endblock %}

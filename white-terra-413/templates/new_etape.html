@@ -3,11 +3,12 @@
 {% block content %}
 	<div style="width:600px; margin-right:auto; margin-left:auto;margin-top:50px;">
     <form method="post">
-	<h3>New Step</h3>
+	<h3>New Stape</h3>
        <table>
         <tr>
           <td>
-            <input type="text" name="Destination" autocomplete="off" placeholder="Where do you want to live an adventure ?" />
+            <label>Address: </label><input id="address"  name="destination" type="text" />
+            <div id="map_canvas" style="width:300px; height:300px"></div><br/>
           </td>
         </tr>
        </table>
@@ -20,12 +21,15 @@
              <br>
         {{erreur}}
           </form>
-        <form methode="post">
+        <form methode="get" action="adventure">
            <table>
         {% for i in tabblockannonce %}
                <tr>
                  <td>
-                     Occupancy : {{i["occupancy"]}}, MinimumStayNight : {{i["minimumStayNight"]}}, Pid :  {{i["pid"]}}
+                     <p>
+                         <INPUT type="hidden" name="id" value={{i["pid"]}} readonly> Occupancy : {{i["occupancy"]}} , MinimumStayNight : {{i["minimumStayNight"]}}, Price :{{i["price"]}}
+                         <input type="submit"  value="Choose">
+                     </p>
                      <br>
                  </td>
                 </tr>

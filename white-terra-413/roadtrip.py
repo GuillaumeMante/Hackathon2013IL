@@ -104,7 +104,7 @@ class MainPage(RoadTripHandler):
     def get(self):
 		if self.user:
 			self.render('front.html', user = self.user, journeys = self.user.get_journeys(), invitations = self.user.get_invitations())
-		else
+		else:
 			self.render('front.html', user = None, journeys = None, invitations = None)
 DATE_RE = re.compile(r'(\d+/\d+/\d+)')
 def valid_date(date):

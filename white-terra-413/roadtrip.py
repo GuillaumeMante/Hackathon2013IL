@@ -151,7 +151,7 @@ class New_adventure(RoadTripHandler):
                 journey.put()
                 participant = Participant(journey = journey, user = self.user)
                 participant.put()
-                self.redirect('new_friends')
+                self.redirect('new_friends?id=' + journey.key().id())
 
 #Fonctionement de l'api Outpost.Travel
 class Travel(RoadTripHandler):
@@ -374,19 +374,20 @@ class Adventure(RoadTripHandler):
 				self.redirect('/')
 			else:
 				acc = self.request.get('accommodation')
+				acc = acc[1:len(acc)-1]
 				step = int(self.request.get('step'))
 				steps = journey.get_steps()
-				for s in steps[step-1]['accommodation'][0]:
-					if s.id == acc:
+				for s in steps[step-1]['accommodation']:
+					if s[0].id == acc:
 						error = True
 						break
 				if not error:
 					s = Suggestion(journey = journey, step = step, type = 'accommodation', id = acc)
 					s.put()
-					url1 = "http://api.outpost.travel/placeRentals/" + acc
+					url1 = "http://api.outpost.travel/placeRentals?pid=" + acc
 					response1 = urllib2.urlopen(url1)
 					data1 = json.load(response1)
-					steps[step-1]['accommodation'].append([s, data1])
+					steps[step-1]['accommodation'].append([s,json.dumps(data1['items'][0]['heading']), json.dumps(data1['items'][0]['description']), json.dumps(data1['items'][0]['link'])])
 				self.render('adventure.html', length = len(steps), steps = steps, journey = journey, sugg_enabled = journey.enable_sugg or journey.owner.key().id() == self.user.key().id())
 		else:
 			self.redirect('/')

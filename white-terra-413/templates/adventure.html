@@ -8,7 +8,7 @@
 		<div class="step"><h6>Step {{i + 1}}</h6>
 			<h5>Places</h5>
 			<p>{% for s in steps[i]['place'] %}
-				{{s.id}}<input type="button" value="vote" />
+				{{s.id}}<input type="button" value="Vote" />
 			{% endfor %}
 			{% if sugg_enabled %}
 			<p align="right"><input type="button" value="Add suggestion" /></p>
@@ -16,7 +16,7 @@
 			</p>
 			<h5>Accommodations</h5>
 			<p>{% for s in steps[i]['accommodation'] %}
-			{{s.id}}<input type="button" value="vote" />
+			{{s.id}}<input type="button" value="Vote" />
 			{% endfor %}
 			{% if sugg_enabled %}
 			<p align="right"><input type="button" value="Add suggestion" /></p>
@@ -24,7 +24,7 @@
 			</p>
 			<h5>Food</h5>
 			<p>{% for s in steps[i]['food'] %}
-			{{s.id}}<input type="button" value="vote" />
+			{{s.id}}<input type="button" value="Vote" />
 			{% endfor %}
 			{% if sugg_enabled %}
 			<p align="right"><input type="button" value="Add suggestion" /></p>
@@ -33,7 +33,7 @@
 		</div>
 		{% endfor %}
 		{% if sugg_enabled %}
-		<input type="button" value="New step" onclick="self.location.href='/new_step?id={{journey.key().id()}}'"/>
+		<p align="center"><input type="button" value="New step" onclick="self.location.href='/new_step?id={{journey.key().id()}}'"/></p>
 		{% endif %}
     </div>
 {% endblock %}

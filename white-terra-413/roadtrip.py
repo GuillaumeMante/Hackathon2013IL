@@ -355,6 +355,7 @@ class NewFriends(RoadTripHandler):
             fl = self.user.get_friends()
             if friendname:
                 self.user.add_friend(friendname)
+                #participant=Participant(journey=
                 self.render('new_friends.html', friendlist=fl)
             else:
                 msg = 'No such guy here'

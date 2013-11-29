@@ -132,15 +132,15 @@ class New_adventure(RoadTripHandler):
             if not self.name:
                 self.name = "journey from " + self.date_debut + " to " + self.date_fin
             if not valid_date(self.date_debut):
-                params['error_date_debut'] = "Ceci n'est pas une date valide."
+                params['error_date_debut'] = "Date not valid."
                 have_error = True
 
             if not valid_date(self.date_fin):
-                params['error_date_fin'] = "Ceci n'est pas une date valide."
+                params['error_date_fin'] = "Date not valid."
                 have_error = True
 
             if not valid_budget(self.budget):
-                params['error_budget'] = "Ceci n'est pas un budget valide."
+                params['error_budget'] ="Budget not valid."
                 have_error = True
 
             if have_error:

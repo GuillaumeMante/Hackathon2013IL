@@ -5,35 +5,35 @@
    <div class="box" style="width:600px; margin-right:auto; margin-left:auto;">
 		<h3>{{journey.name}}</h3>
 		{% for i in range(0,length) %}
-		<div><h4>step {{i + 1}}</h4>
-			<h5>places</h5>
+		<div class="step"><h6>Step {{i + 1}}</h6>
+			<h5>Places</h5>
 			<p>{% for s in steps[i]['place'] %}
 				{{s.id}}<input type="button" value="vote" />
 			{% endfor %}
 			{% if sugg_enabled %}
-			<input type="button" value="add suggestion" />
+			<p align="right"><input type="button" value="Add suggestion" /></p>
 			{% endif %}
 			</p>
-			<h5>accommodations</h5>
+			<h5>Accommodations</h5>
 			<p>{% for s in steps[i]['accommodation'] %}
-			{{s.id}}
+			{{s.id}}<input type="button" value="vote" />
 			{% endfor %}
 			{% if sugg_enabled %}
-			<input type="button" value="add suggestion" />
+			<p align="right"><input type="button" value="Add suggestion" /></p>
 			{% endif %}
 			</p>
-			<h5>food</h5>
+			<h5>Food</h5>
 			<p>{% for s in steps[i]['food'] %}
-			{{s.id}}
+			{{s.id}}<input type="button" value="vote" />
 			{% endfor %}
 			{% if sugg_enabled %}
-			<input type="button" value="add suggestion" />
+			<p align="right"><input type="button" value="Add suggestion" /></p>
 			{% endif %}
 			</p>
 		</div>
 		{% endfor %}
 		{% if sugg_enabled %}
-		<input type="button" value="new step" onclick="self.location.href='/new_step?id={{journey.key().id()}}'"/>
+		<input type="button" value="New step" onclick="self.location.href='/new_step?id={{journey.key().id()}}'"/>
 		{% endif %}
     </div>
 {% endblock %}

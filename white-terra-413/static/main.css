@@ -46,12 +46,32 @@ h3{
     border-radius: 25px;
 }
 
-h4{
-    font-size: 50px;
+h6{
+    font-size: 40px;
     font-weight: bold;
     margin-bottom: 40px;
 	margin-top: 0px;
-	text-align:center;}
+	text-align:center;
+	
+}
+
+.step{
+display: inline-block;
+	border:2px solid gray;
+	padding: 0.5em;
+	width:96%;
+	margin-bottom:10px;
+}
+
+h5{
+	display: inline-block;
+	border:1px solid gray;
+	font-size: 30px;
+    font-weight: bold;
+	margin-bottom: 0px;
+	margin-top: 0px;
+	padding: 0.2em;
+}
 
 li {
  font-family: Arial, sans-serif;
@@ -322,12 +342,11 @@ input[type="button"]{
 	display:inline-block;
 	color:#ffffff;
 	font-family:Times New Roman;
-	font-size:35px;
+	font-size:30px;
 	font-weight:bold;
 	font-style:normal;
-	height:50px;
-	line-height:40px;
-	width:180px;
+	padding:0.3em;
+	line-height:35px;
 	text-decoration:none;
 	text-align:center;
 	text-shadow:-2px -2px 0px #0c1201;

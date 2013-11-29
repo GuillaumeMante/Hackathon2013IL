@@ -294,7 +294,7 @@ class Adventure(RoadTripHandler):
 				steps = journey.get_steps()
 				self.render('adventure.html', length = len(steps), steps = steps, journey = journey, sugg_enabled = journey.enable_sugg or journey.owner.key().id() == self.user.key().id())
 		else:
-			self.response.write("You fail bro")
+			self.redirect('/')
 		
 class NewStep(RoadTripHandler):
 	def get(self):

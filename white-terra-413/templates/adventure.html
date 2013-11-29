@@ -4,11 +4,11 @@
 
    <div class="box" style="width:600px; margin-right:auto; margin-left:auto;">
 		<h3>{{journey.name}}</h3>
-		{% for i in range(0,length - 1) %}
+		{% for i in range(0,length) %}
 		<div><h4>step {{i + 1}}</h4>
 			<h5>places</h5>
 			<p>{% for s in steps[i]['place'] %}
-				{{s.id}}
+				{{s.id}}<input type="button" value="vote" />
 			{% endfor %}
 			{% if sugg_enabled %}
 			<input type="button" value="add suggestion" />

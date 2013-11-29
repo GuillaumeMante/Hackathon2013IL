@@ -400,7 +400,9 @@ input[value="Add suggestion"]{
 input[value="Vote"]{
 	font-size:15px;
 }
-
+input[value="Hide"]{
+	font-size:15px;
+}
 input[value="ok"]{
 	font-size:30px;
 	height:50px;
@@ -417,6 +419,8 @@ input[value="ok"]{
 }
 
 
-
+.contacc{
+	border: 1px solid #cfcfcf;
+}
 
 	

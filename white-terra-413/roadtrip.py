@@ -109,7 +109,7 @@ class Welcome(RoadTripHandler):
 		if self.user:
 			self.render('welcome.html', username = self.user.name, journeys = self.user.get_journeys(), invitations = self.user.get_invitations())
 		else:
-			self.redirect('/signup')
+			self.redirect('/login')
 
 DATE_RE = re.compile(r'(\d+/\d+/\d+)')
 def valid_date(date):
@@ -124,7 +124,7 @@ class New_adventure(RoadTripHandler):
         if self.user:
             self.render('new_adventure.html', username = self.user.name)
         else:
-            self.redirect('/signup')
+            self.redirect('/login')
     def post(self):
             have_error = False
             self.date_debut = self.request.get('date_debut')
@@ -166,21 +166,21 @@ class Travel(RoadTripHandler):
             page=json.dumps(data['page'])
             self.render('travel.html',page=page)
         else:
-            self.redirect('/signup')
+            self.redirect('/login')
 
 class New_friends(RoadTripHandler):
 	def get(self):
 		if self.user:
 			self.render('new_friends.html', username = self.user.name)
 		else:
-			self.redirect('/signup')
+			self.redirect('/login')
 
 class New_etape(RoadTripHandler):
     def get(self):
         if self.user:
             self.render('new_etape.html', username = self.user.name)
         else:
-            self.redirect('/signup')
+            self.redirect('/login')
 
     def post(self):
             self.destination = self.request.get('destination')
@@ -258,7 +258,7 @@ class Register(Signup):
             u.put()
 
             self.login(u)
-            self.redirect('/welcome?username='+str(self.username))
+            self.redirect('/')
 
 class Login(RoadTripHandler):
     def get(self):
@@ -271,7 +271,7 @@ class Login(RoadTripHandler):
         u = User.login(username, password)
         if u:
             self.login(u)
-            self.redirect('/welcome')
+            self.redirect('/')
         else:
             msg = 'Invalid login'
             self.render('login-form.html', error = msg)

@@ -1,27 +1,34 @@
 {% extends "base.html" %}
 
 {% block content %}
-	<div style="width:600px; margin-right:auto; margin-left:auto;margin-top:50px;">
-    <form method="post">
-	<h3>New Stape</h3>
+<table style="width:100%;margin:auto; display:inline-block;float:center;"> <TR>
+	<TD valign="top" style="width:50%">
+    <form method="post" style="width:450px;  margin:auto; margin-left:1%; margin-top:50px;float: right;">
+	<h3>New Step</h3>
        <table>
         <tr>
           <td>
-            <label>Address: </label><input id="address"  name="destination" type="text" />
-            <div id="map_canvas" style="width:300px; height:300px"></div><br/>
-          </td>
+            <div class="address-line"><label>Address: </label> </td>
+			 <td><input id="address"  name="destination" type="text" style="width:350px; " /></div>
+			 </td>
+			 
+           
+          
         </tr>
        </table>
+	    <div id="map_canvas" style="width:435px; height:435px; margin-top:20px;"></div><br/>
     </form>
-    </div>
-    <div>
+    </TD>
+	<TD valign="top"style="width:50%;">
+   <div class="box" style="display:inline-block;margin-top:50px;float: left;">
         <br>
-         <div class="box">
-       TOTAL RESULTS : {{totalresults}}
+
+        
+       <h3>Total Results : {{totalresults}}</h3>
              <br>
         {{erreur}}
-          </div>
         <form method="post" action="/adventure?id={{journey.key().id()}}">
+
            <table>
         {% for i in tabblockannonce %}
                <tr>
@@ -38,7 +45,8 @@
         {% endfor %}
          </table>
 		 <input type="hidden" value="{{step}}" name="step" />
-		 <input type="submit" value="choose" />
+		 <input type="submit" value="Choose" />
         </form>
-    </div>
+    </div></TD> </TR> 
+</table>
 {% endblock %}

@@ -174,10 +174,6 @@ class New_friends(RoadTripHandler):
 		else:
 			self.redirect('/login')
 
-class Test(RoadTripHandler):
-	def get(self):
-			self.render('autocomplettest.html')
-
 class Restaurant(RoadTripHandler):
 	def get(self):
 		if self.user:
@@ -262,7 +258,7 @@ class New_etape(RoadTripHandler):
 						tabblockannonce.append(blockannonce)
 
 
-			self.render('new_etape.html',username = self.user.name,totalresults=totalresults,tabblockannonce=tabblockannonce,test=test,erreur=erreur, journey = journey, step = step);
+			self.render('new_etape.html',username = self.user.name,totalresults=totalresults,tabblockannonce=tabblockannonce,erreur=erreur, journey = journey, step = step);
 
 
 
@@ -477,7 +473,6 @@ app = webapp2.WSGIApplication([('/', MainPage),
 							  ('/travel', Travel),
 							   ('/restaurant', Restaurant),
 							   ('/new_friends', NewFriends),
-							   ('/autocomplettest', Test),
 							   ('/new_etape', New_etape),
 							  ('/new_adventure', New_adventure),
 							   ('/signup', Register),
